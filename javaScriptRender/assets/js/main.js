@@ -1,7 +1,8 @@
 function init(){
     console.info("init");
     FrameBufferTest();
-    setInterval(ConstantUpdate,100);
+    setInterval(ConstantUpdate,10);
+    setInterval(FrameBufferTest, 50);
 };
 function ConstantUpdate(){
     DisplayBuffer();
@@ -78,8 +79,14 @@ function DisplayBuffer (){
     } 
 }
 
+var runner = 0; 
 
 function FrameBufferTest(){
+    runner = runner + 1; 
+    if(runner > 255){
+        runner = 0; 
+    }
+
     const res_x = RenderMap.camera.render.resolution.x;
     const res_y = RenderMap.camera.render.resolution.y;
 
@@ -104,7 +111,7 @@ function FrameBufferTest(){
                 FrameBuffer[vertical_gen_pointer][horisontal_gen_pointer] = {
                     "r":(horisontal_gen_pointer * color_stepping_x) + RandomRangedIntiger(-5,5),
                     "g":(vertical_gen_pointer * color_stepping_x),
-                    "b":0,
+                    "b":runner,
                     "z":0, 
                 };
             }
@@ -113,7 +120,7 @@ function FrameBufferTest(){
                 FrameBuffer[vertical_gen_pointer][horisontal_gen_pointer] = {
                     "r":(horisontal_gen_pointer * color_stepping_x) + RandomRangedIntiger(-5,5),
                     "g":(vertical_gen_pointer * color_stepping_x),
-                    "b":0,
+                    "b":runner,
                     "z":0, 
                 };
             }
@@ -122,7 +129,7 @@ function FrameBufferTest(){
                 FrameBuffer[vertical_gen_pointer][horisontal_gen_pointer] = {
                     "r":(horisontal_gen_pointer * color_stepping_x) + RandomRangedIntiger(-5,5),
                     "g":(vertical_gen_pointer * color_stepping_x),
-                    "b":0, //(horisontal_gen_pointer * color_stepping_x) + RandomRangedIntiger(-5,5),
+                    "b":runner, //(horisontal_gen_pointer * color_stepping_x) + RandomRangedIntiger(-5,5),
                     "z":0, 
                 };
             }
