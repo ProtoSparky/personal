@@ -6,10 +6,11 @@ var RenderMap = {
     "camera":{
         "render":{
             "resolution":{
-                "x":400,
-                "y":400
+                "x":window.innerWidth,
+                "y":window.innerHeight,
+                "scale":1
             },
-            "type":"div", //if div, render using divs as pixels | if svg, render as an svg file
+            "type":"canvas", //if div, render using divs as pixels | if svg, render as an svg file
         }
     },
     "objects":{
