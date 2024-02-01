@@ -1,7 +1,9 @@
 //this is where all data to be rendered will be stored
 var RenderMap = {
     "settings":{
-        
+        "objects":{
+            "object_loc":"./assets/meshes/", //this is the location where all meshes will be
+        }
     },
     "camera":{
         "render":{
@@ -50,6 +52,9 @@ var RenderMap = {
                     "y":1,
                     "z":1, 
                 }
+            },
+            "releative_mesh_data":{
+
             }
 
         }

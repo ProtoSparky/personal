@@ -59,6 +59,39 @@ function FrameBufferTest(){
         }
     }
 }
+function FrameBufferTest2(){
+    const res_x = RenderMap.camera.render.resolution.x;
+    const res_y = RenderMap.camera.render.resolution.y;
+
+    //generate pixels
+    for(let vertical_gen_pointer = 0; vertical_gen_pointer < res_y; vertical_gen_pointer ++){
+        FrameBuffer[vertical_gen_pointer] = {
+
+        }; 
+        for(let horisontal_gen_pointer = 0; horisontal_gen_pointer < res_x; horisontal_gen_pointer ++){
+            //generate gradient
+            
+            //generate pixel stepping for colors
+            const max_r = 255; //max red color
+            const max_g = 255; //max green color
+            const max_b = 255; //max blue color
+            
+            const Rand_r = RandomRangedIntiger(0,max_r);
+            const Rand_g = RandomRangedIntiger(0,max_g);
+            const Rand_b = RandomRangedIntiger(0,max_b);
+            FrameBuffer[vertical_gen_pointer][horisontal_gen_pointer] = {
+                "r":Rand_r, 
+                "g":Rand_g, 
+                "b":Rand_b,
+                "z":0, 
+            };
+            
+        
+        }
+    }
+}
+
+
 
 //clear frame buffer
 function ClearFrameBuffer(){
@@ -79,4 +112,32 @@ function ClearFrameBuffer(){
         
         }
     }
+}
+
+
+//perses obj files
+function parseObj(content) {
+    var lines = content.split('\n');
+    var vertices = [];
+    var texcoords = [];
+    var normals = [];
+
+    for (var i = 0; i < lines.length; i++) {
+        var line = lines[i];
+        var parts = line.trim().split(' ');
+        
+        switch (parts[0]) {
+            case 'v':
+                vertices.push({ x: parseFloat(parts[1]), y: parseFloat(parts[2]), z: parseFloat(parts[3]) });
+                break;
+            case 'vt':
+                texcoords.push({ u: parseFloat(parts[1]), v: parseFloat(parts[2]) });
+                break;
+            case 'vn':
+                normals.push({ x: parseFloat(parts[1]), y: parseFloat(parts[2]), z: parseFloat(parts[3]) });
+                break;
+        }
+    }
+    
+    return { vertices: vertices, texcoords: texcoords, normals: normals };
 }

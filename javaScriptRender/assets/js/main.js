@@ -1,9 +1,9 @@
 function init(){
     console.info("init");
     FrameBufferTest();
-    setInterval(ConstantUpdate,10);
+    setInterval(ConstantUpdate,1);
     ClearFrameBuffer();
-    GetMeshes(); 
+    ImportMeshes(); 
 };
 function ConstantUpdate(){
     DisplayBuffer();
@@ -89,10 +89,27 @@ function GetDisplayRes(type){
     }
 }
 
-function GetMeshes(){
+function ImportMeshes(){
     //get all meshes
+    const all_meshes_array = Object.keys(RenderMap.objects);
+    const all_meshes_array_length = all_meshes_array.length; 
     
+    //iterate trough meshes
+    for(let mesh_pointer = 0; mesh_pointer < all_meshes_array_length; mesh_pointer ++){
+        const current_mesh_name = all_meshes_array[mesh_pointer];
+        
+        //check if mesh is external 
+        if(RenderMap.objects[current_mesh_name].type == "external"){
+            //import mesh
+            const OBJ_contents = ReadAnything(RenderMap.settings.objects.object_loc + current_mesh_name);
+            const OBJ_parsed = parseObj(OBJ_contents);
+            console.log(OBJ_parsed); 
+        }
+    }
 }
+
+
+
 
 
 
