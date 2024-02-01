@@ -2,7 +2,8 @@ function init(){
     console.info("init");
     FrameBufferTest();
     setInterval(ConstantUpdate,10);
-    setInterval(FrameBufferTest, 50);
+    //setInterval(FrameBufferTest, 50);
+    ClearFrameBuffer();
 };
 function ConstantUpdate(){
     DisplayBuffer();
@@ -78,6 +79,14 @@ function DisplayBuffer (){
         ctx.putImageData(imgData, 0, 0);
     } 
 }
+function GetDisplayRes(type){
+    if(type == "x"){
+        return window.innerWidth; 
+    }
+    else if(type == "y"){
+        return window.innerHeight; 
+    }
+}
 
 var runner = 0; 
 function FrameBufferTest(){
@@ -135,6 +144,27 @@ function FrameBufferTest(){
                 };
             }
             
+        
+        }
+    }
+}
+
+
+function ClearFrameBuffer(){
+    const res_x = RenderMap.camera.render.resolution.x;
+    const res_y = RenderMap.camera.render.resolution.y;
+    //generate pixels
+    for(let vertical_gen_pointer = 0; vertical_gen_pointer < res_y; vertical_gen_pointer ++){
+        FrameBuffer[vertical_gen_pointer] = {
+
+        }; 
+        for(let horisontal_gen_pointer = 0; horisontal_gen_pointer < res_x; horisontal_gen_pointer ++){
+            FrameBuffer[vertical_gen_pointer][horisontal_gen_pointer] = {
+                "r":0,
+                "g":0,
+                "b":0,
+                "z":0, 
+            };            
         
         }
     }

@@ -6,11 +6,12 @@ var RenderMap = {
     "camera":{
         "render":{
             "resolution":{
-                "x":window.innerWidth,
-                "y":window.innerHeight,
+                "x":GetDisplayRes("x"),
+                "y":GetDisplayRes("y"),
                 "scale":1
             },
-            "type":"canvas", //if div, render using divs as pixels | if svg, render as an svg file
+            "type":"canvas", //if div, render using divs as pixels | if svg, render as an svg file | Same goes for canvas
+            "render_distance":30, 
         }, 
         "position":{
             "location":{
