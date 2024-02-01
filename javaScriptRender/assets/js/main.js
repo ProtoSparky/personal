@@ -80,11 +80,12 @@ function DisplayBuffer (){
 }
 
 var runner = 0; 
-
 function FrameBufferTest(){
-    runner = runner + 1; 
-    if(runner > 255){
-        runner = 0; 
+    if(runner > 254){
+        runner = runner - 1;
+    }
+    else{
+        runner = runner + 1;
     }
 
     const res_x = RenderMap.camera.render.resolution.x;
@@ -134,14 +135,6 @@ function FrameBufferTest(){
                 };
             }
             
-            /*
-            FrameBuffer[vertical_gen_pointer][horisontal_gen_pointer] = {
-                "r":horisontal_gen_pointer * color_stepping_x,
-                "g":horisontal_gen_pointer * color_stepping_x,
-                "b":horisontal_gen_pointer * color_stepping_x,
-                "z":0, 
-            };
-            */
         
         }
     }
