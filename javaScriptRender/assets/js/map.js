@@ -65,3 +65,8 @@ var RenderMap = {
 var FrameBuffer = {
 
 }; 
+
+//temporary storage
+var TempBuffer = {
+
+};
