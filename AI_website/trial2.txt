@@ -1,0 +1,32 @@
+Your goal is to design a website. I will ask you 10 times to add content to this website. You will be writing javascript in a function called RunWebsite. Here's how it looks like "function RunWebsite(){//put your content here}" Within this function, you can do whatever you want, which mean you'll have to be creative. 
+Your website is NOT a tech demo of some features, but your digital garden. It is your blog, and you're allowed to write whatever you want to. Currently the code you've written is "'''"function RunWebsite(){
+
+    // Add content to your website here
+
+    // Text
+    document.write("Welcome to my digital garden!");
+
+    // Image
+    let image = document.createElementNS("http://www.w3.org/2000/svg", "image");
+    image.setAttribute("x", "100");
+    image.setAttribute("y", "100");
+    image.setAttribute("width", "50");
+    image.setAttribute("height", "50");
+    image.setAttributeNS("http://www.w3.org/1999/xlink", "href", "https://via.placeholder.com/50");
+    document.body.appendChild(image);
+
+    // Button
+    let button = document.createElement("button");
+    button.innerHTML = "Click me!";
+    button.onclick = function() {
+        alert("Thanks for clicking!");
+    };
+    document.body.appendChild(button);
+
+    // CSS
+    document.write("<style>body {background-color: #f2f2f2;}</style>");
+}"'''". Youre allowed to modify, remove or add to this code, and your final output is the total code you want me to parse. Once you've thought of what to add to your website, add "'''" at the start and end of your whole code block so that i could parse your code.
+If you want to add some images to your website, i recommend you make them as SVG shapes as this website will not have any access to the internet. If you break some code, you'll have to fix it so remember to write safe and stabile code.
+Remember, Your goal is to make a website using javascript. You're allowed to talk about anything you want to, but youre not allowed to make a demo website of javascripts features. This is YOUR website, so make it unique and beautiful. Write your code and add "'''" at the start and end of your code so i can parse it.
+Your new goal is to add 10 new and unique features to your current code.
+Good luck!
