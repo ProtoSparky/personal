@@ -1,7 +1,7 @@
 function init(){
     console.info("init");
     FrameBufferTest();
-    setInterval(ConstantUpdate,1);
+    setInterval(ConstantUpdate,50);
     ClearFrameBuffer();
     ImportMeshes(); 
 };
@@ -40,7 +40,15 @@ function DisplayBuffer (){
         const DisplaySizeX = RenderMap.camera.render.resolution.x * RenderMap.camera.render.resolution.scale;
         const DisplaySizeY = RenderMap.camera.render.resolution.y* RenderMap.camera.render.resolution.scale;
         const render_area = document.getElementById("render");
-        render_area.innerHTML = "";
+        render_area.innerHTML = ""; 
+        /*
+        This canvas code has a memory leak. Too bad!
+        const current_canvas = document.getElementById("canvas");
+        if(current_canvas =! undefined){
+            current_canvas.remove();
+        }
+        */
+
 
         var canvas = document.createElement('canvas');
         canvas.style.position = "absolute";
@@ -51,6 +59,7 @@ function DisplayBuffer (){
         render_area.appendChild(canvas);
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
+        canvas.id = "canvas";
         var ctx = canvas.getContext('2d');
         var imgData = ctx.getImageData(0, 0, DisplaySizeX, DisplaySizeY);
         var data = imgData.data;
@@ -103,7 +112,10 @@ function ImportMeshes(){
             //import mesh
             const OBJ_contents = ReadAnything(RenderMap.settings.objects.object_loc + current_mesh_name);
             const OBJ_parsed = parseObj(OBJ_contents);
-            console.log(OBJ_parsed); 
+            //TODO add mtl support
+            console.log(OBJ_parsed); //todo remove this 
+            RenderMap.objects[current_mesh_name].object_data = OBJ_parsed;
+            
         }
     }
 }

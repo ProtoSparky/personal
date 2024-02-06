@@ -53,8 +53,8 @@ var RenderMap = {
                     "z":1, 
                 }
             },
-            "releative_mesh_data":{
-
+            "object_data":{
+                
             }
 
         }
@@ -65,3 +65,8 @@ var RenderMap = {
 var FrameBuffer = {
 
 }; 
+
+//temporary storage for render processes
+var RendTempBuffer = {
+
+};
