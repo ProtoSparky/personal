@@ -31,8 +31,6 @@ function CheckForInput(){
 function BackgroundUpdate(){
     //update things in the background
 
-
-
 }
 
 function RenderFrameBuffer(){
@@ -72,8 +70,8 @@ function RenderFrameBuffer(){
             //apply styles
             if(CurrentObject.style.LineStyle != undefined){
                 //set line thickness
-                if(CurrentObject.style.LineStyle.width =! undefined){
-                    ctx.lineWidth = CurrentObject.style.LineStyle.width; 
+                if(CurrentObject.style.LineStyle.width != undefined){
+                    ctx.lineWidth = CurrentObject.style.LineStyle.width;  //TODO fux this bug
                 }
 
                 //set color
@@ -81,9 +79,31 @@ function RenderFrameBuffer(){
                     ctx.strokeStyle = CurrentObject.style.LineStyle.background_color; 
                 }
             }
+            
+            //apply rotation
+            if(CurrentObject.position.rotation != undefined){
+                // Calculate the center of the polygon
+                let centerX =  0;
+                let centerY =  0;
+                for (let i =  0; i < CurrentObject.position.position.length; i++) {
+                    centerX += CurrentObject.position.position[i].x;
+                    centerY += CurrentObject.position.position[i].y;
+                }
+                centerX /= CurrentObject.position.position.length;
+                centerY /= CurrentObject.position.position.length;
+
+                // Translate to the center of the polygon
+                ctx.translate(centerX, centerY);
+
+                // Rotate the context
+                const angleInRadians = CurrentObject.position.rotation * Math.PI /  180;
+                ctx.rotate(angleInRadians);
+
+                // Translate back
+                ctx.translate(-centerX, -centerY);
+            }
 
             //draw polygons
-
             ctx.beginPath();
             ctx.moveTo(CurrentObject.position.position[0].x,CurrentObject.position.position[0].y);
 

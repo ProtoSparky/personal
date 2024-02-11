@@ -44,6 +44,7 @@ var GameState = {
                     { x:  20, y:    30},
                 ],
                 "scale":{},
+                "rotation":180,
             },
             "style":{
                 "LineStyle":{
