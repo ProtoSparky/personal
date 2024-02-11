@@ -1,0 +1,48 @@
+<html>
+    <head>
+
+    </head>
+    <body>
+        <canvas id="myCanvas" width="500" height="500"></canvas>
+    </body>
+    <script>
+        
+        const MultipleVertecies = {
+            "0":[            
+                { x:  50, y:  500 },
+                { x:  100, y:  100 },
+                { x:  150, y:  50 },
+                { x:  200, y:  100 },
+                { x:  250, y:  50 }
+            ],
+            "1":[            
+                { x:  -80, y:  500 },
+                { x:  150, y:  180 },
+    
+            ]
+
+        };
+        const color =["blue","red"]; 
+        for(let VTEX = 0; VTEX < Object.keys(MultipleVertecies).length; VTEX++){
+            const currentVTEX_name = Object.keys(MultipleVertecies)[VTEX];
+            const CurrentVTEX = MultipleVertecies[currentVTEX_name]; 
+
+            // Assume we have a canvas element in our HTML with id 'myCanvas'
+            const canvas = document.getElementById('myCanvas');
+            const ctx = canvas.getContext('2d');
+
+            // Set up the line style (optional)
+            ctx.lineWidth =  2; // Make the line thicker
+            ctx.strokeStyle = color[VTEX]; // Color the line blue
+
+            // Draw the polyline
+            ctx.beginPath();
+            ctx.moveTo(CurrentVTEX[0].x, CurrentVTEX[0].y); // Starting point of the line
+            for (let i =  1; i < CurrentVTEX.length; i++) {
+            ctx.lineTo(CurrentVTEX[i].x, CurrentVTEX[i].y); // Additional points
+            }
+            ctx.stroke();
+
+        }
+    </script>
+</html>

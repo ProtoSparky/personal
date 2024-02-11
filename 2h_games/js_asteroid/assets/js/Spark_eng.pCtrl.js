@@ -19,74 +19,8 @@ function check_player_input(){
 
     
 
-    if(key_W && key_A){
-        if(DEBUG){
-            console.log("wa"); 
-        }
-        //check if player is about to not collide, and move
-        if(!IScollided(current_player_X, player_sizeX,  current_player_Y - player_speed,player_sizeY, "col_mesh")[3] && !IScollided(current_player_X - player_speed, player_sizeX,  current_player_Y,player_sizeY, "col_mesh")[1]){
-            player.style.top = (current_player_Y - player_speed);
-            player.style.left = (current_player_X - player_speed);
-        }
-        else if(!IScollided(current_player_X, player_sizeX,  current_player_Y - player_speed,player_sizeY, "col_mesh")[3]){
-            player.style.top = (current_player_Y - player_speed);
-        }
-        else if(!IScollided(current_player_X - player_speed, player_sizeX,  current_player_Y,player_sizeY, "col_mesh")[1]){
-            player.style.left = (current_player_X - player_speed);
-        }
-    }
-    else if(key_W && key_D){
-        if(DEBUG){
-            console.log("wd");
-        }
-        //check if player is about to not collide, and move
-        if(!IScollided(current_player_X, player_sizeX,  current_player_Y - player_speed,player_sizeY, "col_mesh")[3] && !IScollided(current_player_X + player_speed, player_sizeX,  current_player_Y,player_sizeY, "col_mesh")[2]){
-            player.style.top = (current_player_Y - player_speed);
-            player.style.left = (current_player_X + player_speed);
-        }
-        else if(!IScollided(current_player_X, player_sizeX,  current_player_Y - player_speed,player_sizeY, "col_mesh")[3]){
-            player.style.top = (current_player_Y - player_speed);
-        }
-        else if(!IScollided(current_player_X + player_speed, player_sizeX,  current_player_Y,player_sizeY, "col_mesh")[2]){
-            player.style.left = (current_player_X + player_speed);
-        }
-    }
-    else if(key_A && key_S){
-        if(DEBUG){
-            console.log("as");
-        }
-        //check if player is about to not collide, and move
-        if(!IScollided(current_player_X - player_speed, player_sizeX,  current_player_Y,player_sizeY, "col_mesh")[1] && !IScollided(current_player_X, player_sizeX,  current_player_Y + player_speed,player_sizeY, "col_mesh")[4]){
-            player.style.left = (current_player_X - player_speed);
-            player.style.top = (current_player_Y + player_speed);
-        }
-        else if(!IScollided(current_player_X, player_sizeX,  current_player_Y + player_speed,player_sizeY, "col_mesh")[4]){
-            player.style.top = (current_player_Y + player_speed);   
-        }
-        else if(!IScollided(current_player_X - player_speed, player_sizeX,  current_player_Y,player_sizeY, "col_mesh")[1]){
-            player.style.left = (current_player_X - player_speed);
-        }    
-
-        
-        
-    }
-    else if(key_S && key_D){
-        if(DEBUG){
-            console.log("sd");
-        }
-        //check if player is about to not collide, and move
-        if(!IScollided(current_player_X + player_speed, player_sizeX,  current_player_Y,player_sizeY, "col_mesh")[2] && !IScollided(current_player_X, player_sizeX,  current_player_Y+ player_speed,player_sizeY, "col_mesh")[4]){
-            player.style.top = (current_player_Y + player_speed);
-            player.style.left = (current_player_X + player_speed);
-        }
-        else if (!IScollided(current_player_X, player_sizeX,  current_player_Y+ player_speed,player_sizeY, "col_mesh")[4]){
-            player.style.top = (current_player_Y + player_speed);
-        }
-        else if(!IScollided(current_player_X - player_speed, player_sizeX,  current_player_Y,player_sizeY, "col_mesh")[1] && !IScollided(current_player_X + player_speed, player_sizeX,  current_player_Y,player_sizeY, "col_mesh")[2]){
-            player.style.left = (current_player_X + player_speed);
-        }
-    }
-    else if(key_W){
+    
+    if(key_W){
         if(DEBUG){
             console.log("w");
         }
