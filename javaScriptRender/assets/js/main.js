@@ -75,7 +75,7 @@ function RenderFrameBuffer(){
             // Calculate the center of the polygon
             let centerX =  0;
             let centerY =  0;
-            for (let i =  0; i < CurrentObject.object_data.vtex; i++) {
+            for (let i =  0; i < CurrentObject.object_data.vtex.length; i++) {
                 centerX += CurrentObject.object_data.vtex[i].x;
                 centerY += CurrentObject.object_data.vtex[i].y;
             }
