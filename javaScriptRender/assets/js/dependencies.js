@@ -24,3 +24,10 @@ function parseObj(content) {
     
     return { vertices: vertices, texcoords: texcoords, normals: normals };
 }
+
+function TEST_Rotate(){
+    setInterval(rotater,10);
+    function rotater(){
+        RenderMap.objects.player.transform.rot.z = RenderMap.objects.player.transform.rot.z + 10; 
+    }
+}

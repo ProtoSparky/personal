@@ -65,6 +65,7 @@ var RenderMap = {
                     { x:  10, y:    0},
                     { x:  30, y:    0},
                     { x:  20, y:    30},
+                    { x:  500, y:    100},
                 ],
                 "style":{
                     "LineStyle":{
