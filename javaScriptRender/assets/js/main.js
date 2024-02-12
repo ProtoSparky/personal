@@ -1,129 +1,120 @@
 function init(){
-    console.info("init");
-    FrameBufferTest();
-    setInterval(ConstantUpdate,50);
-    ClearFrameBuffer();
-    ImportMeshes(); 
-};
-function ConstantUpdate(){
-    DisplayBuffer();
+    //script spawns menu
+    StartGame();
 }
 
-function DisplayBuffer (){
-    if(RenderMap.camera.render.type == "div"){
-        //display buffer using divs
-        const DisplaySizeX = RenderMap.camera.render.resolution.x * RenderMap.camera.render.resolution.scale;
-        const DisplaySizeY = RenderMap.camera.render.resolution.y* RenderMap.camera.render.resolution.scale;
+function StartGame(){
+    //spawns game
 
-        const render_area = document.getElementById("render");
-        render_area.innerHTML = "";
+    //create background
+    const GameBackground = document.createElement("canvas");
+    GameBackground.style.position = "absolute";
+    GameBackground.id = GameState.gamearea.style.id; 
+    GameBackground.style.top = "0px";
+    GameBackground.style.left = "0px";
 
-        const FB_len_y = Object.keys(FrameBuffer).length;
-        for(let vertical_gen_pointer = 0; vertical_gen_pointer < FB_len_y; vertical_gen_pointer ++){
-            const FB_len_x = Object.keys(FrameBuffer[vertical_gen_pointer]).length;
-            for(let horisontal_gen_pointer = 0; horisontal_gen_pointer < FB_len_x;horisontal_gen_pointer ++ ){
-                const pixel = document.createElement("div");
-                pixel.style.position = "absolute";
-                pixel.style.width = RenderMap.camera.render.resolution.x * RenderMap.camera.render.resolution.scale;
-                pixel.style.height = RenderMap.camera.render.resolution.y * RenderMap.camera.render.resolution.scale;
-                pixel.style.left = (DisplaySizeX / RenderMap.camera.render.resolution.x) * horisontal_gen_pointer;
-                pixel.style.top = (DisplaySizeY / RenderMap.camera.render.resolution.y) * vertical_gen_pointer;
-                const col_r = FrameBuffer[vertical_gen_pointer][horisontal_gen_pointer]["r"];
-                const col_g = FrameBuffer[vertical_gen_pointer][horisontal_gen_pointer]["g"];
-                const col_b = FrameBuffer[vertical_gen_pointer][horisontal_gen_pointer]["b"]; 
-                pixel.style.backgroundColor = currentColor = "rgb(" + col_r + ", " + col_g + ", " + col_b + ")";
-                render_area.appendChild(pixel);
-            }
-        }        
-    }  
-    else if(RenderMap.camera.render.type == "canvas"){
-        const DisplaySizeX = RenderMap.camera.render.resolution.x * RenderMap.camera.render.resolution.scale;
-        const DisplaySizeY = RenderMap.camera.render.resolution.y* RenderMap.camera.render.resolution.scale;
-        const render_area = document.getElementById("render");
-        render_area.innerHTML = ""; 
-        /*
-        This canvas code has a memory leak. Too bad!
-        const current_canvas = document.getElementById("canvas");
-        if(current_canvas =! undefined){
-            current_canvas.remove();
-        }
-        */
+    GameBackground.style.backgroundColor = GameState.gamearea.style.background_color; 
+    document.body.appendChild(GameBackground);
 
 
-        var canvas = document.createElement('canvas');
-        canvas.style.position = "absolute";
-        canvas.style.top = 0;
-        canvas.style.left = 0;
-        canvas.style.width = DisplaySizeX;
-        canvas.style.height = DisplaySizeY;
-        render_area.appendChild(canvas);
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        canvas.id = "canvas";
-        var ctx = canvas.getContext('2d');
-        var imgData = ctx.getImageData(0, 0, DisplaySizeX, DisplaySizeY);
-        var data = imgData.data;
-
-        const FB_len_y = Object.keys(FrameBuffer).length;
-        for(let vertical_gen_pointer = 0; vertical_gen_pointer < FB_len_y; vertical_gen_pointer++){
-            const FB_len_x = Object.keys(FrameBuffer[vertical_gen_pointer]).length;
-            for(let horisontal_gen_pointer = 0; horisontal_gen_pointer < FB_len_x; horisontal_gen_pointer++){
-                const CurrentFB = FrameBuffer[vertical_gen_pointer][horisontal_gen_pointer];
-                const col_r = CurrentFB["r"];
-                const col_g = CurrentFB["g"];
-                const col_b = CurrentFB["b"];
-
-                // Calculate the index in the data array for the pixel
-                var index = (vertical_gen_pointer * DisplaySizeX + horisontal_gen_pointer) * 4;
-
-                // Set the color of the pixel
-                data[index] = col_r;
-                data[index + 1] = col_g;
-                data[index + 2] = col_b;
-                data[index + 3] = 255; // Alpha channel
-            }
-        }
-
-        // Put the modified image data back onto the canvas
-        ctx.putImageData(imgData, 0, 0);
-    } 
-}
-//gets display resolution
-function GetDisplayRes(type){
-    if(type == "x"){
-        return window.innerWidth; 
-    }
-    else if(type == "y"){
-        return window.innerHeight; 
-    }
-}
-
-function ImportMeshes(){
-    //get all meshes
-    const all_meshes_array = Object.keys(RenderMap.objects);
-    const all_meshes_array_length = all_meshes_array.length; 
     
-    //iterate trough meshes
-    for(let mesh_pointer = 0; mesh_pointer < all_meshes_array_length; mesh_pointer ++){
-        const current_mesh_name = all_meshes_array[mesh_pointer];
-        
-        //check if mesh is external 
-        if(RenderMap.objects[current_mesh_name].type == "external"){
-            //import mesh
-            const OBJ_contents = ReadAnything(RenderMap.settings.objects.object_loc + current_mesh_name);
-            const OBJ_parsed = parseObj(OBJ_contents);
-            //TODO add mtl support
-            console.log(OBJ_parsed); //todo remove this 
-            RenderMap.objects[current_mesh_name].object_data = OBJ_parsed;
-            
-        }
-    }
+    setInterval(CheckForInput,10);
+    setInterval(BackgroundUpdate,1000);
+    setInterval(RenderFrameBuffer,50);
 }
 
+function CheckForInput(){
+    //function that runs every 10ms
+    
+
+}
+function BackgroundUpdate(){
+    //update things in the background
+
+}
+
+function RenderFrameBuffer(){
+    //iterate trough framebuffer
+    const Canvas = document.getElementById(GameState.gamearea.style.id);
+    const ctx = Canvas.getContext("2d");
+    ctx.clearRect(0,  0, Canvas.width, Canvas.height); // Clear the canvas
 
 
+    for(let FB_pointer = 0; FB_pointer < Object.keys(GameState.framebuffer).length; FB_pointer ++){
+        const CurrentObject = GameState.framebuffer[FB_pointer]; 
+        //console.log(CurrentObject); 
+        const Canvas = document.getElementById(GameState.gamearea.style.id);
+        const ctx = Canvas.getContext("2d");
+
+        // Get the device pixel ratio
+        const dpr = window.devicePixelRatio ||  1;
+        
+        // Calculate the size of the canvas in pixels
+        const canvasWidth = window.innerWidth * dpr;
+        const canvasHeight = window.innerHeight * dpr;
+        
+        // Set the canvas size
+        Canvas.width = canvasWidth;
+        Canvas.height = canvasHeight;
+        
+        // Scale the context to match the device's pixel ratio
+        ctx.scale(dpr, dpr);
 
 
+        if(CurrentObject.ObjectProperties.id.render_id == "camera"){
+            //apply camera stuff
+        }
+        else{
+            //render objects
+            
+            //apply styles
+            if(CurrentObject.style.LineStyle != undefined){
+                //set line thickness
+                if(CurrentObject.style.LineStyle.width != undefined){
+                    ctx.lineWidth = CurrentObject.style.LineStyle.width;  //TODO fux this bug
+                }
+
+                //set color
+                if(CurrentObject.style.LineStyle.background_color != undefined){
+                    ctx.strokeStyle = CurrentObject.style.LineStyle.background_color; 
+                }
+            }
+            
+            //apply rotation
+            if(CurrentObject.position.rotation != undefined){
+                // Calculate the center of the polygon
+                let centerX =  0;
+                let centerY =  0;
+                for (let i =  0; i < CurrentObject.position.position.length; i++) {
+                    centerX += CurrentObject.position.position[i].x;
+                    centerY += CurrentObject.position.position[i].y;
+                }
+                centerX /= CurrentObject.position.position.length;
+                centerY /= CurrentObject.position.position.length;
+
+                // Translate to the center of the polygon
+                ctx.translate(centerX, centerY);
+
+                // Rotate the context
+                const angleInRadians = CurrentObject.position.rotation * Math.PI /  180;
+                ctx.rotate(angleInRadians);
+
+                // Translate back
+                ctx.translate(-centerX, -centerY);
+            }
+
+            //draw polygons
+            ctx.beginPath();
+            ctx.moveTo(CurrentObject.position.position[0].x,CurrentObject.position.position[0].y);
+
+            for (let i =  1; i < CurrentObject.position.position.length; i++) {
+                ctx.lineTo(CurrentObject.position.position[i].x, CurrentObject.position.position[i].y); // Additional points
+            }
+            ctx.stroke();
+
+        }
+    }
 
 
+}
 
