@@ -3,7 +3,15 @@ var RenderMap = {
     "settings":{
         "objects":{
             "object_loc":"./assets/meshes/", //this is the location where all meshes will be
+        },
+        "render_settings":{
+            "dimention":"2d",
+        },
+        "canvas":{
+            "id":"canvas",
+            "background_color":"black",
         }
+
     },
     "camera":{
         "transform":{
@@ -28,8 +36,8 @@ var RenderMap = {
         }
     },
     "objects":{
-        "test.obj":{
-            "type":"external",
+        "player":{ //key should be file name but since this is an internal object, itll be fine
+            "type":"internal",
             "transform":{
                 "loc":{
                     //location
@@ -51,72 +59,25 @@ var RenderMap = {
                 }
             },
             "object_data":{
-                
-            }
-
-        }
-    }
-};
-
-
-var GameState = {
-    "player":{
-        "position":{
-            "heading":0,
-            "velocity":{
-                "current_velocity":0,
-                "min_velocity":0,
-                "max_velocity":400,
-            }
-        }
-    },
-    "gamearea":{
-        "style":{
-            "background_color":"black", //canvas background color
-            "id":"canvas" //canvas id name
-        }
-    },
-    "framebuffer":{
-        "0":{
-            "ObjectProperties":{
-                "id":{
-                    "id":"camera",
-                    "render_id":"camera",
-                }
-            },
-            "position":{
-                "position":[{x:30,y:30}],
-                "scale":{},
-
-            }
-        },
-        "1":{
-            "ObjectProperties":{
-                "id":{
-                    "id":"player",
-                    "render_id":"object",
-                }
-            },
-            "position":{
-                "position":[
+                //releative vertex data
+                "vtex":[
                     { x:  20, y:    30},
                     { x:  10, y:    0},
                     { x:  30, y:    0},
                     { x:  20, y:    30},
                 ],
-                "scale":{},
-                "rotation":180,
-            },
-            "style":{
-                "LineStyle":{
-                    "width":2, 
-                    "background_color":"white",
+                "style":{
+                    "LineStyle":{
+                        "width":2, 
+                        "background_color":"white",
+                    }
                 }
+
             }
+
         }
     }
 };
-
 
 
 
