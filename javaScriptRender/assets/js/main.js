@@ -35,31 +35,26 @@ function BackgroundUpdate(){
 function RenderFrameBuffer(){
     //iterate trough framebuffer
     const Canvas = document.getElementById(RenderMap.settings.canvas.id);
-    const ctx = Canvas.getContext("2d");
+    const ctx = Canvas.getContext(RenderMap.settings.render_settings.dimention);
     ctx.clearRect(0,  0, Canvas.width, Canvas.height); // Clear the canvas
-
 
     for(let FB_pointer = 0; FB_pointer < Object.keys(RenderMap.objects).length; FB_pointer ++){
         const CurrentObject = RenderMap.objects[Object.keys(RenderMap.objects)[FB_pointer]]; 
         //console.log(CurrentObject); 
         const Canvas = document.getElementById(RenderMap.settings.canvas.id);
-        const ctx = Canvas.getContext("2d");
-
+        const ctx = Canvas.getContext(RenderMap.settings.render_settings.dimention);
         // Get the device pixel ratio
-        const dpr = window.devicePixelRatio ||  1;
-        
+        const dpr = window.devicePixelRatio ||  1;        
         // Calculate the size of the canvas in pixels
         const canvasWidth = window.innerWidth * dpr;
-        const canvasHeight = window.innerHeight * dpr;
-        
+        const canvasHeight = window.innerHeight * dpr;        
         // Set the canvas size
         Canvas.width = canvasWidth;
-        Canvas.height = canvasHeight;
-        
+        Canvas.height = canvasHeight;        
         // Scale the context to match the device's pixel ratio
         ctx.scale(dpr, dpr);
 
-        //render objects
+
         
         //apply styles
         if(CurrentObject.object_data.style.LineStyle != undefined){
@@ -93,7 +88,6 @@ function RenderFrameBuffer(){
             // Rotate the context
             const angleInRadians = CurrentObject.transform.rot.z * Math.PI /  180;
             ctx.rotate(angleInRadians);
-
             // Translate back
             ctx.translate(-centerX, -centerY);
         }
