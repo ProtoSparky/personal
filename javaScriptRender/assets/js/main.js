@@ -88,6 +88,7 @@ function RenderFrameBuffer(){
             // Rotate the context
             const angleInRadians = CurrentObject.transform.rot.z * Math.PI /  180;
             ctx.rotate(angleInRadians);
+
             // Translate back
             ctx.translate(-centerX, -centerY);
         }
