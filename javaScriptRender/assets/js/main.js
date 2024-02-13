@@ -38,24 +38,19 @@ function RenderFrameBuffer(){
     const Canvas = document.getElementById(RenderMap.settings.canvas.id);
     const ctx = Canvas.getContext(RenderMap.settings.render_settings.dimention);
     ctx.clearRect(0,  0, Canvas.width, Canvas.height); // Clear the canvas
+    const dpr = window.devicePixelRatio ||  1;        
+    // Calculate the size of the canvas in pixels
+    const canvasWidth = window.innerWidth * dpr;
+    const canvasHeight = window.innerHeight * dpr;        
+    // Set the canvas size
+    Canvas.width = canvasWidth;
+    Canvas.height = canvasHeight;        
+    // Scale the context to match the device's pixel ratio
+    ctx.scale(dpr, dpr);
 
     for(let FB_pointer = 0; FB_pointer < Object.keys(RenderMap.objects).length; FB_pointer ++){
         //Resize display when rendering
         const CurrentObject = RenderMap.objects[Object.keys(RenderMap.objects)[FB_pointer]]; 
-        //console.log(CurrentObject); 
-        const Canvas = document.getElementById(RenderMap.settings.canvas.id);
-        const ctx = Canvas.getContext(RenderMap.settings.render_settings.dimention);
-        // Get the device pixel ratio
-        const dpr = window.devicePixelRatio ||  1;        
-        // Calculate the size of the canvas in pixels
-        const canvasWidth = window.innerWidth * dpr;
-        const canvasHeight = window.innerHeight * dpr;        
-        // Set the canvas size
-        Canvas.width = canvasWidth;
-        Canvas.height = canvasHeight;        
-        // Scale the context to match the device's pixel ratio
-        ctx.scale(dpr, dpr);
-
         
         //apply styles to currently drawed polygon
         if(CurrentObject.object_data.style.LineStyle != undefined){
@@ -82,7 +77,11 @@ function RenderFrameBuffer(){
         }
         CurrentObject.object_data.vertex.vtex_transformed = CurrentObject.object_data.vertex.vtex_raw.map(vertex => applyTransform(vertex, CurrentObject.transform.loc, CurrentObject.transform.sc));
         
-        
+        //
+        //
+        //
+        //
+        //TODO: Rotation is borked for some reason. All objects get same rotation
         //apply rotation to transformed data
         if(CurrentObject.transform.rot != undefined){
             // Calculate the center of the polygon
@@ -132,6 +131,9 @@ function LoadAssets(){
             console.info("loading " + Object.keys(RenderMap.objects)[FB_pointer]); 
             let OBJ_data = parseObj(ReadAnything(RenderMap.settings.objects.object_loc + Object.keys(RenderMap.objects)[FB_pointer]));
             CurrentObject.object_data.vertex.vtex_raw = OBJ_data.vertices; 
+
+            //shitty temp fix
+            
         }
     }
     

@@ -88,8 +88,8 @@ var RenderMap = {
             "transform":{
                 "loc":{
                     //location
-                    "x":0,
-                    "y":0,
+                    "x":400,
+                    "y":400,
                     "z":0,
                 },
                 "rot":{
@@ -100,8 +100,8 @@ var RenderMap = {
                 },
                 "sc":{
                     //scale
-                    "x":1,
-                    "y":1,
+                    "x":100,
+                    "y":100,
                     "z":1, 
                 }
             },
