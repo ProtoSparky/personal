@@ -20,7 +20,7 @@ function StartGame(){
     setInterval(CheckForInput,10);
     setInterval(BackgroundUpdate,1000);
     setInterval(RenderFrameBuffer,10);
-    TEST_Rotate();
+    //TEST_Rotate();
 }
 
 function CheckForInput(){
