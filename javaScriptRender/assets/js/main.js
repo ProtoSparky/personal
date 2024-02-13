@@ -16,11 +16,11 @@ function StartGame(){
     document.body.appendChild(GameBackground);
 
 
-    
+    LoadAssets(); //start loading assets
     setInterval(CheckForInput,10);
     setInterval(BackgroundUpdate,1000);
     setInterval(RenderFrameBuffer,10);
-    //TEST_Rotate();
+    TEST_Rotate();
 }
 
 function CheckForInput(){
@@ -40,6 +40,7 @@ function RenderFrameBuffer(){
     ctx.clearRect(0,  0, Canvas.width, Canvas.height); // Clear the canvas
 
     for(let FB_pointer = 0; FB_pointer < Object.keys(RenderMap.objects).length; FB_pointer ++){
+        //Resize display when rendering
         const CurrentObject = RenderMap.objects[Object.keys(RenderMap.objects)[FB_pointer]]; 
         //console.log(CurrentObject); 
         const Canvas = document.getElementById(RenderMap.settings.canvas.id);
@@ -55,9 +56,8 @@ function RenderFrameBuffer(){
         // Scale the context to match the device's pixel ratio
         ctx.scale(dpr, dpr);
 
-
         
-        //apply styles
+        //apply styles to currently drawed polygon
         if(CurrentObject.object_data.style.LineStyle != undefined){
             //set line thickness
             if(CurrentObject.object_data.style.LineStyle.width != undefined){
@@ -72,27 +72,28 @@ function RenderFrameBuffer(){
         }
 
         //transform object space to world space coordinates
-        //Read from vtex, transform, and write to vtex_transformed
-        function applyTranslation(vertex, translation) {
+        //Read from vertex.vtex, transform, and write to vertex.vtex_transformed
+        //this set converts object space to world space, and scales the object
+        function applyTransform(vertex, translation,scale) {
             return {
-                x: vertex.x + translation.x,
-                y: vertex.y + translation.y,
+                x: (vertex.x * scale.x) + translation.x,
+                y: (vertex.y * scale.y) + translation.y,
             };
         }
-        CurrentObject.object_data.vtex_transformed = CurrentObject.object_data.vtex.map(vertex => applyTranslation(vertex, CurrentObject.transform.loc));
-
+        CurrentObject.object_data.vertex.vtex_transformed = CurrentObject.object_data.vertex.vtex_raw.map(vertex => applyTransform(vertex, CurrentObject.transform.loc, CurrentObject.transform.sc));
+        
         
         //apply rotation to transformed data
         if(CurrentObject.transform.rot != undefined){
             // Calculate the center of the polygon
             let centerX =  0;
             let centerY =  0;
-            for (let i =  0; i < CurrentObject.object_data.vtex_transformed.length; i++) {
-                centerX += CurrentObject.object_data.vtex_transformed[i].x;
-                centerY += CurrentObject.object_data.vtex_transformed[i].y;
+            for (let i =  0; i < CurrentObject.object_data.vertex.vtex_transformed.length; i++) {
+                centerX += CurrentObject.object_data.vertex.vtex_transformed[i].x;
+                centerY += CurrentObject.object_data.vertex.vtex_transformed[i].y;
             }
-            centerX /= CurrentObject.object_data.vtex_transformed.length;
-            centerY /= CurrentObject.object_data.vtex_transformed.length;
+            centerX /= CurrentObject.object_data.vertex.vtex_transformed.length;
+            centerY /= CurrentObject.object_data.vertex.vtex_transformed.length;
 
             // Translate to the center of the polygon
             ctx.translate(centerX, centerY);
@@ -104,14 +105,14 @@ function RenderFrameBuffer(){
             // Translate back
             ctx.translate(-centerX, -centerY);
         }
-        
+
 
         //draw vertex data from transforemed data
         ctx.beginPath();
-        ctx.moveTo(CurrentObject.object_data.vtex_transformed[0].x,CurrentObject.object_data.vtex_transformed[0].y);
+        ctx.moveTo(CurrentObject.object_data.vertex.vtex_transformed[0].x,CurrentObject.object_data.vertex.vtex_transformed[0].y);
 
-        for (let i =  1; i < CurrentObject.object_data.vtex_transformed.length; i++) {
-            ctx.lineTo(CurrentObject.object_data.vtex_transformed[i].x, CurrentObject.object_data.vtex_transformed[i].y); // Additional points
+        for (let i =  1; i < CurrentObject.object_data.vertex.vtex_transformed.length; i++) {
+            ctx.lineTo(CurrentObject.object_data.vertex.vtex_transformed[i].x, CurrentObject.object_data.vertex.vtex_transformed[i].y); // Additional points
         }
         ctx.stroke();
 
@@ -121,3 +122,17 @@ function RenderFrameBuffer(){
 
 }
 
+function LoadAssets(){
+    console.info("loading meshes");
+
+    //load meshes
+    for(let FB_pointer = 0; FB_pointer < Object.keys(RenderMap.objects).length; FB_pointer ++){
+        const CurrentObject = RenderMap.objects[Object.keys(RenderMap.objects)[FB_pointer]];         
+        if(!CurrentObject.internal){
+            console.info("loading " + Object.keys(RenderMap.objects)[FB_pointer]); 
+            let OBJ_data = parseObj(ReadAnything(RenderMap.settings.objects.object_loc + Object.keys(RenderMap.objects)[FB_pointer]));
+            CurrentObject.object_data.vertex.vtex_raw = OBJ_data.vertices; 
+        }
+    }
+    
+}
