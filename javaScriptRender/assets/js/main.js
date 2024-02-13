@@ -70,18 +70,29 @@ function RenderFrameBuffer(){
             }
             
         }
+
+        //transform object space to world space coordinates
+        //Read from vtex, transform, and write to vtex_transformed
+        function applyTranslation(vertex, translation) {
+            return {
+                x: vertex.x + translation.x,
+                y: vertex.y + translation.y,
+            };
+        }
+        CurrentObject.object_data.vtex_transformed = CurrentObject.object_data.vtex.map(vertex => applyTranslation(vertex, CurrentObject.transform.loc));
+
         
-        //apply rotation
+        //apply rotation to transformed data
         if(CurrentObject.transform.rot != undefined){
             // Calculate the center of the polygon
             let centerX =  0;
             let centerY =  0;
-            for (let i =  0; i < CurrentObject.object_data.vtex.length; i++) {
-                centerX += CurrentObject.object_data.vtex[i].x;
-                centerY += CurrentObject.object_data.vtex[i].y;
+            for (let i =  0; i < CurrentObject.object_data.vtex_transformed.length; i++) {
+                centerX += CurrentObject.object_data.vtex_transformed[i].x;
+                centerY += CurrentObject.object_data.vtex_transformed[i].y;
             }
-            centerX /= CurrentObject.object_data.vtex.length;
-            centerY /= CurrentObject.object_data.vtex.length;
+            centerX /= CurrentObject.object_data.vtex_transformed.length;
+            centerY /= CurrentObject.object_data.vtex_transformed.length;
 
             // Translate to the center of the polygon
             ctx.translate(centerX, centerY);
@@ -93,13 +104,14 @@ function RenderFrameBuffer(){
             // Translate back
             ctx.translate(-centerX, -centerY);
         }
+        
 
-        //draw polygons
+        //draw vertex data from transforemed data
         ctx.beginPath();
-        ctx.moveTo(CurrentObject.object_data.vtex[0].x,CurrentObject.object_data.vtex[0].y);
+        ctx.moveTo(CurrentObject.object_data.vtex_transformed[0].x,CurrentObject.object_data.vtex_transformed[0].y);
 
-        for (let i =  1; i < CurrentObject.object_data.vtex.length; i++) {
-            ctx.lineTo(CurrentObject.object_data.vtex[i].x, CurrentObject.object_data.vtex[i].y); // Additional points
+        for (let i =  1; i < CurrentObject.object_data.vtex_transformed.length; i++) {
+            ctx.lineTo(CurrentObject.object_data.vtex_transformed[i].x, CurrentObject.object_data.vtex_transformed[i].y); // Additional points
         }
         ctx.stroke();
 
