@@ -132,8 +132,8 @@ function LoadAssets(){
             let OBJ_data = parseObj(ReadAnything(RenderMap.settings.objects.object_loc + Object.keys(RenderMap.objects)[FB_pointer]));
             CurrentObject.object_data.vertex.vtex_raw = OBJ_data.vertices; 
 
-            //shitty temp fix
-            
+            //shitty temp fix that does not work
+            CurrentObject.object_data.vertex.vtex_raw[Object.keys(CurrentObject.object_data.vertex.vtex_raw)] =  CurrentObject.object_data.vertex.vtex_raw[2]
         }
     }
     
