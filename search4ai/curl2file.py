@@ -64,8 +64,8 @@ def scrape_and_filter_website(url):
 ############################################################################################
 ############################################################################################
 ############################################################################################
-
 #this function scrapes and converts the text in a website to a txt file
+
 def read_website(url):
     # Send a GET request to the URL
     response = requests.get(url)
@@ -104,4 +104,4 @@ def read_website(url):
         print(f"Failed to retrieve the webpage. Status code: {response.status_code}")
 
 # Example usage:
-read_website("https://ndla.no/subject:846a7552-ea6c-4174-89a4-85d6ba48c96e/topic:c4519d4e-c0d5-467c-bba9-6cff3e7c64cb/topic:257b2ce7-d151-4c80-87c3-ae2f4814d52f/resource:470f02b1-4098-42f8-8715-cd639d8b216e")
+read_website("https://les.unibok.no/b1f79d12-89e1-49db-9e19-c484f7c1edc2")
