@@ -94,6 +94,8 @@ function RenderFrameBuffer(){
             ctx.translate(-centerX, -centerY);
         }
 
+
+
         //draw polygons
         ctx.beginPath();
         ctx.moveTo(CurrentObject.object_data.vtex[0].x,CurrentObject.object_data.vtex[0].y);

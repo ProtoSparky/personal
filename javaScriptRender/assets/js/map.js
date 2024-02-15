@@ -65,7 +65,6 @@ var RenderMap = {
                     { x:  10, y:    0},
                     { x:  30, y:    0},
                     { x:  20, y:    30},
-                    { x:  500, y:    100},
                 ],
                 "style":{
                     "LineStyle":{
@@ -81,11 +80,6 @@ var RenderMap = {
 };
 
 
-
-//this is the frame buffer used to render stuff on screen
-var FrameBuffer = {
-
-}; 
 
 //temporary storage for render processes
 var RendTempBuffer = {
