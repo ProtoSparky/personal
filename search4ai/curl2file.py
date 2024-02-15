@@ -104,4 +104,4 @@ def read_website(url):
         print(f"Failed to retrieve the webpage. Status code: {response.status_code}")
 
 # Example usage:
-read_website("https://les.unibok.no/b1f79d12-89e1-49db-9e19-c484f7c1edc2")
+read_website("http://protosparky.uk")
