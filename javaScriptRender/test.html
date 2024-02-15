@@ -1,0 +1,34 @@
+<html>
+    <head></head>
+    <body></body>
+    <script>
+    const vtex = [
+        { x:  20, y:  30 },
+        { x:  10, y:  0 },
+        { x:  30, y:  0 },
+        { x:  20, y:  30 },
+        { x:  500, y:  100 },
+    ];
+
+    const transform = {
+        loc: {
+            x:  2,
+            y:  0,
+            z:  0,
+        }
+    };
+
+    // Function to apply translation to a single vertex
+    function applyTranslation(vertex, translation) {
+        return {
+            x: vertex.x + translation.x,
+            y: vertex.y + translation.y,
+        };
+    }
+
+    // Apply translation to all vertices
+    const translatedVertices = vtex.map(vertex => applyTranslation(vertex, transform.loc));
+
+    console.log(translatedVertices);
+    </script>
+</html>
