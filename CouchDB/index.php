@@ -6,7 +6,7 @@ $COUCH_PASS = "lin2017";
 
 class CouchDB {
     private $host;
-    private $database = 'protosparky';
+    private $database = 'protosparky-backend';
     private $cookie = "none";
     private $username;
     private $password;
@@ -105,9 +105,8 @@ class CouchDB {
 $couchDB = new CouchDB();
 // Create a new document
 $document = array(
-    'name' => 'Sparky',
-    'type' => 'protogen',
-    "_id" => "UWU", 
+    "_id"=>"users",
+
 );
 $response = $couchDB->createDocument($document);
 print_r($response);
@@ -125,21 +124,21 @@ $response = $couchDB->createDocument($document);
 print_r($response);
 
 
-
+*/
 // Get a document
 $couchDB = new CouchDB();
 $documentId = 'UWU';
 $response = $couchDB->getDocument($documentId);
 print_r($response);
 
-*/
+/*
 // Update a document
 $couchDB = new CouchDB();
 $documentId = 'UWU';
 $document = array(
-    'name' => 'uu',
+    'name' => 'Sparky',
     'type' => 'protogen',
-    '_rev' => '1-b6908a3c1069628c93f9ac916da7d0dd'
+    '_rev' => '2-1a4ec852ae6e8c4a674f2adaf6ee6d93'
 );
 $response = $couchDB->updateDocument($documentId, $document);
 print_r($response);
