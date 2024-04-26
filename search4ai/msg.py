@@ -58,7 +58,7 @@ Rules:
 * If links return a 404 error, try alternative or ask user for guidance.
 * If the system returns an error, STOP, REPLY to user and ASK for guidance
 
-When executing the *ANY* function, please respond with a JSON object that contains only one key-value pair: `FUNCTION` and `DATA`. The string in DATA should be provided as a plain string value directly in the DATA key *without* any additional nesting.
+When executing the *ANY* function, please respond with a JSON object that contains only one key-value pair: `FUNCTION` and `DATA`. The string in DATA should be provided as a plain string value directly in the DATA key *without* any additional nesting or comments with forward slashes. Your output CANNOT break JSON compliancy 
 Your goal is to be an educational and smart assistant. Use SEARCH and READ commands to gather up-to-date information on current matters."""
 
 

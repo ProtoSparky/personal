@@ -1,0 +1,38 @@
+[
+    {
+        "role": "system",
+        "content": "From now on, all communication will be in JSON format.\n\nYour primary key is FUNCTION. Available states include:\n  REPLY: respond to user's question\n  SEARCH: search for links on given query\n  READ: retrieve readable text from domain (no search engines!)\n  CALC: perform basic arithmetic operations (+, -, /, *)\n\nRules:\n\n* Use only one function at a time.\n* After executing, wait for server response before returning data.\n* Do not execute READ or SEARCH functions with Google or other search engine domains.\n* If links return a 404 error, try alternative or ask user for guidance.\n* If the system returns an error, STOP, REPLY to user and ASK for guidance\n\nWhen executing the *ANY* function, please respond with a JSON object that contains only one key-value pair: `FUNCTION` and `DATA`. The string in DATA should be provided as a plain string value directly in the DATA key *without* any additional nesting or comments with forward slashes. Your output CANNOT break JSON compliancy \nYour goal is to be an educational and smart assistant. Use SEARCH and READ commands to gather up-to-date information on current matters."
+    },
+    {
+        "role": "user",
+        "content": "What's the current weather in Oslo?"
+    },
+    {
+        "role": "assistant",
+        "content": "{\"FUNCTION\": \"READ\", \"DATA\": \"https://www.yr.no/en/weather/forecast/6350\"}"
+    },
+    {
+        "role": "user",
+        "content": "{\"FUNCTION\": \"Failed to retrieve the webpage. STOP, run FUNCTION REPLY and ask user for guidance!\", \"SRV_RETURN\": \"READ\"}"
+    },
+    {
+        "role": "assistant",
+        "content": "{\"FUNCTION\": \"REPLY\", \"DATA\": \"Sorry about that! It seems like I had trouble accessing the page. Could you please tell me what city or region you are interested in knowing the weather for? I'll do my best to find an alternative source.\"}"
+    },
+    {
+        "role": "user",
+        "content": "Here's the link to a local weather station called yr.no \"https://www.yr.no/en/forecast/daily-table/1-72837/Norway/Oslo/Oslo/Oslo\". Hope this helps!"
+    },
+    {
+        "role": "assistant",
+        "content": "{ \"FUNCTION\": \"READ\", \"DATA\": \"https://www.yr.no/en/forecast/daily-table/1-72837/Norway/Oslo/Oslo/Oslo\" }"
+    },
+    {
+        "role": "user",
+        "content": "{\"FUNCTION\": \"Yr - Oslo - Long term forecast\\nSkip to content\\nServed by the Norwegian Meteorological Institute and NRK\\nCity \\u2013 large town (Norway),\\nelevation 10\\nPress to show information about this location\\nOther conditions\\nOther conditions\\n21-day forecast\\n21-day forecast\\nSea and coast\\nSea and coast\\nIt looks like you're using an old browser. To access all of the content on Yr, we recommend that you update your browser.\\nIt looks like JavaScript is disabled in your browser. To access all the content on Yr, we recommend that you have JavaScript enabled.\\nCurrent conditions\\nFeels like\\n2 ms light breeze from east with gusts at 4 ms\\nPrecipitation forecast\\nNo precipitation the next 90 minutes\\nShow forecast for the next hour\\nShow precipitation forecast\\nWeather forecast for the next 10 days\\nTemperature highlow\\nSaturday 27 Apr.\\nOngoing: Forest fire danger: Yellow severity\\nOngoing: Forest fire danger: Yellow severity\\nMaximum minimum temperature\\nOpen hourly forecast\\nSunday 28 Apr.\\nOngoing: Forest fire danger: Yellow severity\\nOngoing: Forest fire danger: Yellow severity\\nMaximum minimum temperature\\nOpen hourly forecast\\nMonday 29 Apr.\\nMaximum minimum temperature\\nOpen hourly forecast\\nTuesday 30 Apr.\\nMaximum minimum temperature\\nOpen hourly forecast\\nWednesday 1 May\\nMaximum minimum temperature\\nOpen hourly forecast\\nThursday 2 May\\nMaximum minimum temperature\\nOpen hourly forecast\\nFriday 3 May\\nMaximum minimum temperature\\nOpen hourly forecast\\nSaturday 4 May\\nMaximum minimum temperature\\nOpen hourly forecast\\nSunday 5 May\\nMaximum minimum temperature\\nOpen hourly forecast\\nMonday 6 May\\nMaximum minimum temperature\\nOpen hourly forecast\\nHow often is the weather forecast updated?\\nForecast as PDF\\nForecast as SVG\\nYr is served by\\n: Ingrid St\\u00f8ver Jensen\\nExecutive editor\\n: Vibeke F\\u00fcrst Haugen\\nMeteorologically responsible\\n: Roar Sk\\u00e5lin\\nCopyright \\u00a9 Norwegian Meteorological Institute and the Norwegian Broadcasting Corporation 2007-2024\\nSee all help articles\\nContact us\\nChoose language  velg spr\\u00e5k\\nAbout Yr\\nOur collaborators\\nApp for iOS\\nApp for Android\\nYr on social media\\nYr on Facebook\\nYr on Twitter\\nYr on Instagram\\nOther services\\nYr for developers\\nWater temperatures\\n\", \"SRV_RETURN\": \"READ\"}"
+    },
+    {
+        "role": "assistant",
+        "content": "{  \"FUNCTION\": \"REPLY\", \"DATA\": \"I've retrieved the long-term forecast from yr.no! It looks like there's a high chance of no precipitation in the next 90 minutes. The wind is blowing at 2 ms with gusts up to 4 ms, and the temperature will be ranging between certain highs and lows over the next few days. There are also warnings about forest fire danger. Would you like me to provide more details or help with anything else?\" }"
+    }
+]
