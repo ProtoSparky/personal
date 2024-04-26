@@ -103,4 +103,4 @@ def read_website(url):
         print(f"Failed to retrieve the webpage. Status code: {response.status_code}")
 
 # Example usage:
-read_website("http://protosparky.uk")
+scrape_website("http://protosparky.uk")

@@ -1,5 +1,7 @@
 from ollama import Client
 import json 
+import components.read_website as readwsite
+import components.nicknacks as nick
 
 model = "llama3"
 API_location = "http://localhost:11434/api"
@@ -31,10 +33,12 @@ Important:
 
     Only one function can be executed at a time. If you need to perform another action, please execute the new function and wait for the response from the server.
 
+    When executing the *ANY* function, please respond with a JSON object that contains only one key-value pair: `FUNCTION` and `DATA`. The string in DATA should be provided as a plain string value directly in the DATA key *without* any additional nesting.
+
 
 Your goal is to be an educational and smart assistant. You will use the internet with the SEARCH and READ commands to gather up-to-date information on current matters."""
 
-#system_MSG = {"role": "system", "content": "From now on, you must only communicat in JSON. Your primary key is FUNCTION. This key can have multiple states such as REPLY, which replies to the user's question, where said reply is stored in a secondary key called DATA. SEARCH returns links from any search query in the DATA key, READ is a function that inputs one domain in the DATA key, and returns the website's content as readable text. The last function is CALC which returns the answer of any mathematical equation. CALC has to be treated as a simple calculator that does + - / and *"}
+
 system_MSG = {"role": "system", "content": system_MSG_str}
 
 
@@ -75,8 +79,8 @@ def MSG_AI(model):
     history.append(response_clean)
     write_json(history, memory_area)
 
-
-    print(response_clean)
+    ProcessRequest(response_clean)
+    #print(response_clean)
 
 def SetupStorage():
     #this function sets up the JSON file if it does not exist at the time of message send
@@ -92,4 +96,48 @@ def SetupStorage():
         temp_storage.append(system_MSG)
         write_json(temp_storage, memory_area)
 
+def ProcessRequest(response):
+    #this processes the requests 
+    response_str = response["content"]
+    response_obj = json.loads(response_str)
+    if("FUNCTION" in response_obj):
+        #continue execution
+        data = response_obj["DATA"]
+
+        #define functions
+        if(response_obj["FUNCTION"] == "REPLY"):
+            print(response_obj["DATA"])
+        elif(response_obj["FUNCTION"] == "SEARCH"):
+            #run for search
+            print("want2 searcch")
+        elif(response_obj["FUNCTION"] == "READ"):
+            #run for read
+            web_text = nick.remove_forward_slashes(readwsite.read_website(data))
+            return2AI("READ",web_text)
+
+        elif(response_obj["FUNCTION"] == "CALC"):
+            #run for calc
+            print("want2caslc")
+    else:
+        print("Shits fucked. " + response_obj)
+    
+
+def return2AI(text, function_name):
+    formatting = {
+        "FUNCTION":function_name,
+        "SRV_RETURN":text
+    }
+    msg = {"role": "system", "content":formatting }
+    history = read_json(memory_area)
+    history.append(msg)
+    print(json.dumps(msg, indent=4))
+    response = Client(API_location).chat(model=model, messages=history)
+    response_clean = response["message"]
+    #save prompt
+    history.append(response_clean)
+    write_json(history, memory_area)
+
+
 MSG_AI(model)
+
+
