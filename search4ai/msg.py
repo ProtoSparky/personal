@@ -152,7 +152,7 @@ def return2AI(text, function_name):
         "FUNCTION":function_name,
         "SRV_RETURN":text
     }
-    msg = {"role": "system", "content": json.dumps(formatting)}
+    msg = {"role": "user", "content": json.dumps(formatting)}
     history = read_json(memory_area)
     history.append(msg)
 
