@@ -34,10 +34,10 @@ def read_website(url):
             return total_str
         else:
             print(f"Failed to retrieve the webpage. Status code: else {response.status_code}")
-            return "Failed to retrieve the webpage. Consider using a different URL"
+            return "Failed to retrieve the webpage. STOP, run FUNCTION REPLY and ask user for guidance!"
     except:
             print(f"Failed to retrieve the webpage. Status code: except {response.status_code}")
-            return "Failed to retrieve the webpage. Consider using a different URL"
+            return "Failed to retrieve the webpage. STOP, run FUNCTION REPLY and ask user for guidance!"
 
 
 print(read_website("https://www.yr.no/nb/v"))

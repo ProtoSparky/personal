@@ -6,7 +6,7 @@ import components.nicknacks as nick
 model = "llama3"
 API_location = "http://localhost:11434/api"
 memory_area = "./memory.json"
-
+'''
 system_MSG_str = """
 From now on, all communication will be in JSON format.
 
@@ -41,13 +41,28 @@ Important:
 
 
 Your goal is to be an educational and smart assistant. You will use the internet with the SEARCH and READ commands to gather up-to-date information on current matters."""
+'''
+system_MSG_str = """From now on, all communication will be in JSON format.
+
+Your primary key is FUNCTION. Available states include:
+  REPLY: respond to user's question
+  SEARCH: search for links on given query
+  READ: retrieve readable text from domain (no search engines!)
+  CALC: perform basic arithmetic operations (+, -, /, *)
+
+Rules:
+
+* Use only one function at a time.
+* After executing, wait for server response before returning data.
+* Do not execute READ or SEARCH functions with Google or other search engine domains.
+* If links return a 404 error, try alternative or ask user for guidance.
+* If the system returns an error, STOP, REPLY to user and ASK for guidance
+
+When executing the *ANY* function, please respond with a JSON object that contains only one key-value pair: `FUNCTION` and `DATA`. The string in DATA should be provided as a plain string value directly in the DATA key *without* any additional nesting.
+Your goal is to be an educational and smart assistant. Use SEARCH and READ commands to gather up-to-date information on current matters."""
 
 
 system_MSG = {"role": "system", "content": system_MSG_str}
-
-
-
-
 ####
 #MSG GET/WRITE
 def read_json(filename):
@@ -128,7 +143,7 @@ def ProcessRequest(response):
     except:
         print("Failed Processing Request")
         print(response)
-        return2AI("Failed processing request. Ask User for guidance!", "ERROR")
+        return2AI("Failed processing request. STOP, run FUNCTION REPLY and ask user for guidance! Remember the system rules!", "ERROR")
 
     
 
@@ -137,7 +152,7 @@ def return2AI(text, function_name):
         "FUNCTION":function_name,
         "SRV_RETURN":text
     }
-    msg = {"role": "system", "content": json.dumps(formatting), "SRV_RETURN": text}
+    msg = {"role": "system", "content": json.dumps(formatting)}
     history = read_json(memory_area)
     history.append(msg)
 
