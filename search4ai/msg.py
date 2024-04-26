@@ -33,6 +33,10 @@ Important:
 
     Only one function can be executed at a time. If you need to perform another action, please execute the new function and wait for the response from the server.
 
+    Under NO circumstances are you allowed to READ a google or any other search engine domain. If you wish to search for something, use SEARCH for this.
+
+    IF ANY links from READ or SEARCH return a 404 or error, TRY something else OR ask the user for guidance
+
     When executing the *ANY* function, please respond with a JSON object that contains only one key-value pair: `FUNCTION` and `DATA`. The string in DATA should be provided as a plain string value directly in the DATA key *without* any additional nesting.
 
 
@@ -99,27 +103,33 @@ def SetupStorage():
 def ProcessRequest(response):
     #this processes the requests 
     response_str = response["content"]
-    response_obj = json.loads(response_str)
-    if("FUNCTION" in response_obj):
-        #continue execution
-        data = response_obj["DATA"]
+    try: 
+        response_obj = json.loads(response_str)
+        if("FUNCTION" in response_obj):
+            #continue execution
+            data = response_obj["DATA"]
 
-        #define functions
-        if(response_obj["FUNCTION"] == "REPLY"):
-            print(response_obj["DATA"])
-        elif(response_obj["FUNCTION"] == "SEARCH"):
-            #run for search
-            print("want2 searcch")
-        elif(response_obj["FUNCTION"] == "READ"):
-            #run for read
-            web_text = nick.remove_forward_slashes(readwsite.read_website(data))
-            return2AI("READ",web_text)
+            #define functions
+            if(response_obj["FUNCTION"] == "REPLY"):
+                print(response_obj["DATA"])
+            elif(response_obj["FUNCTION"] == "SEARCH"):
+                #run for search
+                print("want2 searcch")
+            elif(response_obj["FUNCTION"] == "READ"):
+                #run for read
+                print("Reading " + readwsite.read_website(data))
+                web_text = nick.remove_forward_slashes(readwsite.read_website(data))
+                return2AI("READ",web_text)
+            elif(response_obj["FUNCTION"] == "CALC"):
+                #run for calc
+                print("want2caslc")
+        else:
+            print("Shits fucked. " + response_obj)
+    except:
+        print("Failed Processing Request")
+        print(response)
+        return2AI("Failed processing request. Ask User for guidance!", "ERROR")
 
-        elif(response_obj["FUNCTION"] == "CALC"):
-            #run for calc
-            print("want2caslc")
-    else:
-        print("Shits fucked. " + response_obj)
     
 
 def return2AI(text, function_name):
@@ -127,15 +137,16 @@ def return2AI(text, function_name):
         "FUNCTION":function_name,
         "SRV_RETURN":text
     }
-    msg = {"role": "system", "content":formatting }
+    msg = {"role": "system", "content": json.dumps(formatting), "SRV_RETURN": text}
     history = read_json(memory_area)
     history.append(msg)
-    print(json.dumps(msg, indent=4))
+
     response = Client(API_location).chat(model=model, messages=history)
     response_clean = response["message"]
     #save prompt
     history.append(response_clean)
     write_json(history, memory_area)
+    ProcessRequest(response_clean)
 
 
 MSG_AI(model)
