@@ -4,46 +4,11 @@ import components.read_website as readwsite
 import components.nicknacks as nick
 import components.search as search
 import traceback
-
+import datetime
+current_datetime = datetime.datetime.now()
 model = "llama3"
 API_location = "http://localhost:11434/api"
 memory_area = "./memory.json"
-'''
-system_MSG_str = """
-From now on, all communication will be in JSON format.
-
-Your primary key is FUNCTION. This key can have multiple states, including:
-
-
-    REPLY: replies to the user's question and stores the response in the DATA key.
-
-    SEARCH: returns links from any search query performed within the DATA key.
-
-    READ: takes a domain as input and returns the website's content as readable text stored in the DATA key.
-
-    CALC: performs basic arithmetic operations (+, -, /, *) on mathematical equations and returns the result.
-
-
-Important:
-
-
-    The AI will only use one function at a time.
-
-    After executing a function, the server will reply with data.
-
-    The AI is then allowed to return data to the user.
-
-    Only one function can be executed at a time. If you need to perform another action, please execute the new function and wait for the response from the server.
-
-    Under NO circumstances are you allowed to READ a google or any other search engine domain. If you wish to search for something, use SEARCH for this.
-
-    IF ANY links from READ or SEARCH return a 404 or error, TRY something else OR ask the user for guidance
-
-    When executing the *ANY* function, please respond with a JSON object that contains only one key-value pair: `FUNCTION` and `DATA`. The string in DATA should be provided as a plain string value directly in the DATA key *without* any additional nesting.
-
-
-Your goal is to be an educational and smart assistant. You will use the internet with the SEARCH and READ commands to gather up-to-date information on current matters."""
-'''
 system_MSG_str = """From now on, all communication will be in JSON format.
 
 Your primary key is FUNCTION. Available states include:
@@ -60,7 +25,8 @@ Rules:
 * If the system returns an error, STOP, REPLY to user and ASK for guidance
 
 When executing the *ANY* function, please respond with a JSON object that contains only one key-value pair: `FUNCTION` and `DATA`. The string in DATA should be provided as a plain string value directly in the DATA key *without* any additional nesting or comments with forward slashes. Your output CANNOT break JSON compliancy.
-Your goal is to be an educational and smart assistant. Use SEARCH and READ commands to gather up-to-date information on current matters."""
+Your goal is to be an educational and smart assistant. Use SEARCH and READ commands to gather up-to-date information on current matters.""" + " The current date and time is :" + current_datetime.strftime("%Y-%m-%d %H:%M:%S") + " as YYYY-MM-DD HH:MM:SS."
+
 
 
 system_MSG = {"role": "system", "content": system_MSG_str}
@@ -103,7 +69,7 @@ def MSG_AI(model):
     history.append(response_clean)
     write_json(history, memory_area)
     ProcessRequest(response_clean)
-    #print(response_clean)
+
 
 def SetupStorage():
     #this function sets up the JSON file if it does not exist at the time of message send
@@ -123,8 +89,7 @@ def ProcessRequest(response):
     #this processes the requests 
     response_str = nick.remove_non_json_text(response["content"])
     try: 
-        response_obj = json.loads(response_str)
-        print(response_obj)
+        response_obj = CleanInput(response_str)
         if("FUNCTION" in response_obj):
             #continue execution
             data = response_obj["DATA"]
@@ -134,12 +99,12 @@ def ProcessRequest(response):
                 MSG_AI(model)
             elif(response_obj["FUNCTION"] == "SEARCH"):
                 #run for search
-                search_query = response_obj["DATA"]
-                print("Searching for... " + search_query)  
-                queries = search.search(search_query)
+                print("Searching for... " + data)  
+                queries = search.g_search(data)
                 return2AI(queries, "SEARCH")
             elif(response_obj["FUNCTION"] == "READ"):
                 #run for read
+                print("Reading page... " + data)  
                 web_text = nick.remove_forward_slashes(readwsite.read_website(data))
                 return2AI("READ",web_text)
             elif(response_obj["FUNCTION"] == "CALC"):
@@ -149,15 +114,36 @@ def ProcessRequest(response):
             print("Shits fucked. " + response_obj)
     except Exception as e:
         print("-------------------------------ERROR-------------------------------")
-        print(response_str)
         error_message = f"Error: {e}"
         print(error_message)
         tb = traceback.format_exc()
         print(tb)
         print("Failed Processing JSON")
+        print("RETURN DATA")
+        print(response)
+        print("-------------------------------ERROR-------------------------------")
         return2AI("Failed processing request. STOP, run FUNCTION REPLY and ask user for guidance! Remember the system rules!", "ERROR")
-
     
+def CleanInput(str):
+    try:
+        response_obj = json.loads(str)
+        return response_obj
+    except:
+        #try more harsh filtering
+        str.replace('“', '"')
+        str.replace('”','"')
+        try:
+            response_obj = json.loads(str)
+            return response_obj
+        except:
+            print("CLEAN INPUT GIVING UP")
+            print(str)
+            return {}
+
+
+
+
+
 
 def return2AI(text, function_name):
     formatting = {
@@ -177,5 +163,3 @@ def return2AI(text, function_name):
 
 
 MSG_AI(model)
-
-

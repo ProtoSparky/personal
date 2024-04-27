@@ -1,6 +1,13 @@
-from googlesearch import search
-def serch(query):
-    queries = []
-    for current_link in search(query, tld="co.in", num=10, stop=10, pause=2):
-        queries.append(current_link)
-    return queries
+try:
+    from googlesearch import search
+except ImportError: 
+    print("No module named 'google' found")
+
+def g_search(query):
+    domains = []
+    for j in search(query, num=10, stop=10, pause=2):
+        domains.append(j)
+    return domains
+
+
+

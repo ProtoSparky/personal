@@ -22,5 +22,3 @@ def remove_non_json_text(input_string):
 
     return input_string
 
-
-print(remove_non_json_text('"I apologize for the mistake!\n\n`{ \"FUNCTION\": \"READ\", \"DATA\": \"yr.no\" }`\n\nPlease wait for the server response..."'))
