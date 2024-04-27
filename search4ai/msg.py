@@ -2,6 +2,8 @@ from ollama import Client
 import json 
 import components.read_website as readwsite
 import components.nicknacks as nick
+import components.search as search
+import traceback
 
 model = "llama3"
 API_location = "http://localhost:11434/api"
@@ -46,19 +48,18 @@ system_MSG_str = """From now on, all communication will be in JSON format.
 
 Your primary key is FUNCTION. Available states include:
   REPLY: respond to user's question
-  SEARCH: search for links on given query
-  READ: retrieve readable text from domain (no search engines!)
+  SEARCH: search google for links on a given query
+  READ: retrieve all readable text from a domain (no search engines allowed!)
   CALC: perform basic arithmetic operations (+, -, /, *)
-
+You WILL use SEARCH and or READ to get up to date information from the internet if the user's query requires that. 
 Rules:
 
 * Use only one function at a time.
 * After executing, wait for server response before returning data.
 * Do not execute READ or SEARCH functions with Google or other search engine domains.
-* If links return a 404 error, try alternative or ask user for guidance.
 * If the system returns an error, STOP, REPLY to user and ASK for guidance
 
-When executing the *ANY* function, please respond with a JSON object that contains only one key-value pair: `FUNCTION` and `DATA`. The string in DATA should be provided as a plain string value directly in the DATA key *without* any additional nesting or comments with forward slashes. Your output CANNOT break JSON compliancy 
+When executing the *ANY* function, please respond with a JSON object that contains only one key-value pair: `FUNCTION` and `DATA`. The string in DATA should be provided as a plain string value directly in the DATA key *without* any additional nesting or comments with forward slashes. Your output CANNOT break JSON compliancy.
 Your goal is to be an educational and smart assistant. Use SEARCH and READ commands to gather up-to-date information on current matters."""
 
 
@@ -88,16 +89,19 @@ def write_json(data, filename):
 def MSG_AI(model):
     SetupStorage()
     user_input = input("Send message to AI ") 
-    msg = {"role": "user", "content": ""}
-    msg["content"] = user_input
+    formatting = {
+        "FUNCTION":"USER REPLY",
+        "SRV_RETURN":user_input
+    }
+    msg = {"role": "user", "content": json.dumps(formatting)}
     history = read_json(memory_area)
     history.append(msg)
+
     response = Client(API_location).chat(model=model, messages=history)
     response_clean = response["message"]
     #save prompt
     history.append(response_clean)
     write_json(history, memory_area)
-
     ProcessRequest(response_clean)
     #print(response_clean)
 
@@ -117,22 +121,25 @@ def SetupStorage():
 
 def ProcessRequest(response):
     #this processes the requests 
-    response_str = response["content"]
+    response_str = nick.remove_non_json_text(response["content"])
     try: 
         response_obj = json.loads(response_str)
+        print(response_obj)
         if("FUNCTION" in response_obj):
             #continue execution
             data = response_obj["DATA"]
-
             #define functions
             if(response_obj["FUNCTION"] == "REPLY"):
                 print(response_obj["DATA"])
+                MSG_AI(model)
             elif(response_obj["FUNCTION"] == "SEARCH"):
                 #run for search
-                print("want2 searcch")
+                search_query = response_obj["DATA"]
+                print("Searching for... " + search_query)  
+                queries = search.search(search_query)
+                return2AI(queries, "SEARCH")
             elif(response_obj["FUNCTION"] == "READ"):
                 #run for read
-                print("Reading " + readwsite.read_website(data))
                 web_text = nick.remove_forward_slashes(readwsite.read_website(data))
                 return2AI("READ",web_text)
             elif(response_obj["FUNCTION"] == "CALC"):
@@ -140,9 +147,14 @@ def ProcessRequest(response):
                 print("want2caslc")
         else:
             print("Shits fucked. " + response_obj)
-    except:
-        print("Failed Processing Request")
-        print(response)
+    except Exception as e:
+        print("-------------------------------ERROR-------------------------------")
+        print(response_str)
+        error_message = f"Error: {e}"
+        print(error_message)
+        tb = traceback.format_exc()
+        print(tb)
+        print("Failed Processing JSON")
         return2AI("Failed processing request. STOP, run FUNCTION REPLY and ask user for guidance! Remember the system rules!", "ERROR")
 
     
