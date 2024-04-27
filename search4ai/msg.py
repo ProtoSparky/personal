@@ -4,10 +4,11 @@ import components.read_website as readwsite
 import components.nicknacks as nick
 import components.search as search
 import components.summarize as summ
+import components.calc as calc
 import traceback
 import datetime
 current_datetime = datetime.datetime.now()
-model = "llama3"
+model = "codellama:34b"
 API_location = "http://localhost:11434/api"
 memory_area = "./memory.json"
 system_MSG_str = """From now on, all communication will be in JSON format.
@@ -96,7 +97,7 @@ def ProcessRequest(response):
             data = response_obj["DATA"]
             #define functions
             if(response_obj["FUNCTION"] == "REPLY"):
-                print(response_obj["DATA"])
+                print(">>> " + response_obj["DATA"])
                 MSG_AI(model)
             elif(response_obj["FUNCTION"] == "SEARCH"):
                 #run for search
@@ -108,10 +109,11 @@ def ProcessRequest(response):
                 #run for read
                 print("Reading page... " + data)  
                 web_text = summ.summarize(nick.remove_forward_slashes(readwsite.read_website(data)), sentences_count = 50)
-                return2AI("READ",web_text)
+                return2AI(web_text,"READ")
             elif(response_obj["FUNCTION"] == "CALC"):
                 #run for calc
-                print("want2caslc")
+                print("using calculator for " + data)
+                return2AI(calc.calculate(data), "CALC")
         else:
             print("Shits fucked. " + str(response_obj))
     except Exception as e:
