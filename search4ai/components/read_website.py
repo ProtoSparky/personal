@@ -3,12 +3,12 @@ from bs4 import BeautifulSoup
 def read_website(url):
     try:
         # Send a GET request to the URL
-        response = requests.get(url)
+        web_response = requests.get(url)
         
         # Check if the request was successful (status code   200)
-        if response.status_code ==   200:
+        if web_response.status_code ==   200:
             # Parse the HTML content
-            soup = BeautifulSoup(response.text, 'html.parser')
+            soup = BeautifulSoup(web_response.text, 'html.parser')
             
             # Remove script tags, noscript tags, style tags, and svg tags
             for tag in soup(['script', 'noscript', 'style', 'svg']):
@@ -33,8 +33,8 @@ def read_website(url):
                 total_str = total_str + line + "\n"
             return total_str
         else:
-            print(f"Failed to retrieve the webpage. Status code: else {response.status_code}")
-            return f"Failed to retrieve the webpage. Status code: except {response.status_code} Ask user for guidance"
+            print(f"Failed to retrieve the webpage. Status code: else {web_response.status_code}")
+            return f"Failed to retrieve the webpage. Status code: except {web_response.status_code} Ask user for guidance"
     except:
-            print(f"Failed to retrieve the webpage. Status code: except {response.status_code}")
-            return f"Failed to retrieve the webpage. Status code: except {response.status_code} Ask user for guidance"
+            print(f"Failed to retrieve the webpage. Status code: except {web_response.status_code}")
+            return f"Failed to retrieve the webpage. Status code: except {web_response.status_code} Ask user for guidance"

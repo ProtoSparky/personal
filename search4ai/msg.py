@@ -7,21 +7,22 @@ import components.summarize as summ
 import components.calc as calc
 import traceback
 import datetime
+import os
 current_datetime = datetime.datetime.now()
-model = "wizardlm2"
+model = "llama3"
 API_location = "http://localhost:11434/api"
 memory_area = "./memory.json"
 system_MSG_str = """
 From now on, all communication will be in JSON format.
 Your primary key is FUNCTION. Available states include:
-  REPLY: respond to user's question
+  REPLY: respond to user's question.
   SEARCH: search google for links on a given query. This can be combined with READ to read ONE link at a time. Said link has to be a plain string
   READ: retrieve all readable text from a domain (no search engines allowed!)
-  CALC: perform basic arithmetic operations (+, -, /, *)
+  CALC: perform basic arithmetic operations (+, -, /, *). When using CALC, the DATA key cannot contain anything else other than your numbers and your arithmetic operation. "2 times 2" = wrong. "2*2" = correct
 You WILL use SEARCH and or READ to get up to date information from the internet if the user's query requires that. 
 When executing the *ANY* function, please respond with a JSON object that contains only one key-value pair: `FUNCTION` and `DATA`. The string in DATA should be provided as a plain string value directly in the DATA key *without* any additional nesting or comments with forward slashes. Your output CANNOT break JSON compliancy by adding ivalid characters or text before and or after the JSON string. Your text reply MIST be within DATA!
+If FUNCTION contains "USER REPLY", then a user has replied. Otherwise assume that what replied to you was the server backend and not a user
 Rules:
-
 * Use only one function at a time.
 * After executing, wait for server response before returning data.
 * Do not execute READ or SEARCH functions with Google or other search engine domains.
@@ -55,7 +56,7 @@ def write_json(data, filename):
 
 def MSG_AI(model):
     SetupStorage()
-    user_input = input("Send message to AI ") 
+    user_input = input(">>> Send message to AI ") 
     formatting = {
         "FUNCTION":"USER REPLY",
         "SRV_RETURN":user_input
@@ -96,7 +97,7 @@ def ProcessRequest(response):
             data = response_obj["DATA"]
             #define functions
             if(response_obj["FUNCTION"] == "REPLY"):
-                print(">>> " + response_obj["DATA"])
+                print("---" + response_obj["DATA"])
                 MSG_AI(model)
             elif(response_obj["FUNCTION"] == "SEARCH"):
                 #run for search
@@ -114,7 +115,10 @@ def ProcessRequest(response):
                 print("using calculator for " + data)
                 return2AI(calc.calculate(data), "CALC")
         else:
-            print("Shits fucked. " + str(response_obj))
+            print("Backend command not recognized!")
+            print("----------------------------------")
+            print(str(response["content"]))
+            return2AI("Failed processing request. Are you sure you are proper rules for formatting the JSON command?", "ERROR")
     except Exception as e:
         print("-------------------------------ERROR-------------------------------")
         error_message = f"Error: {e}"
@@ -144,10 +148,6 @@ def CleanInput(str):
             return {}
 
 
-
-
-
-
 def return2AI(text, function_name):
     formatting = {
         "FUNCTION":function_name,
@@ -164,5 +164,9 @@ def return2AI(text, function_name):
     write_json(history, memory_area)
     ProcessRequest(response_clean)
 
+
+
+#clear terminal
+nick.ReadyScreen()
 
 MSG_AI(model)
