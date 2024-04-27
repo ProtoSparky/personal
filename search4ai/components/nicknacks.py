@@ -1,4 +1,5 @@
 import json
+import re
 def remove_forward_slashes(text):
     return text.replace('/', '')
 def remove_back_slashes(text):
@@ -22,3 +23,9 @@ def remove_non_json_text(input_string):
 
     return input_string
 
+def clean_data(data):
+  text = re.sub(r"\[[0-9]*\]"," ",data)
+  text = text.lower()
+  text = re.sub(r'\s+'," ",text)
+  text = re.sub(r","," ",text)
+  return text

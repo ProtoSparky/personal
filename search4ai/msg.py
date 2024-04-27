@@ -3,6 +3,7 @@ import json
 import components.read_website as readwsite
 import components.nicknacks as nick
 import components.search as search
+import components.summarize as summ
 import traceback
 import datetime
 current_datetime = datetime.datetime.now()
@@ -106,7 +107,7 @@ def ProcessRequest(response):
             elif(response_obj["FUNCTION"] == "READ"):
                 #run for read
                 print("Reading page... " + data)  
-                web_text = nick.remove_forward_slashes(readwsite.read_website(data))
+                web_text = summ.summarize(nick.remove_forward_slashes(readwsite.read_website(data)), sentences_count = 50)
                 return2AI("READ",web_text)
             elif(response_obj["FUNCTION"] == "CALC"):
                 #run for calc
