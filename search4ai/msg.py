@@ -13,7 +13,7 @@ system_MSG_str = """From now on, all communication will be in JSON format.
 
 Your primary key is FUNCTION. Available states include:
   REPLY: respond to user's question
-  SEARCH: search google for links on a given query
+  SEARCH: search google for links on a given query. This can be combined with READ to read ONE link at a time. Said link has to be a plain string
   READ: retrieve all readable text from a domain (no search engines allowed!)
   CALC: perform basic arithmetic operations (+, -, /, *)
 You WILL use SEARCH and or READ to get up to date information from the internet if the user's query requires that. 
@@ -101,6 +101,7 @@ def ProcessRequest(response):
                 #run for search
                 print("Searching for... " + data)  
                 queries = search.g_search(data)
+                print("Found links " + str(queries))
                 return2AI(queries, "SEARCH")
             elif(response_obj["FUNCTION"] == "READ"):
                 #run for read
@@ -111,7 +112,7 @@ def ProcessRequest(response):
                 #run for calc
                 print("want2caslc")
         else:
-            print("Shits fucked. " + response_obj)
+            print("Shits fucked. " + str(response_obj))
     except Exception as e:
         print("-------------------------------ERROR-------------------------------")
         error_message = f"Error: {e}"
