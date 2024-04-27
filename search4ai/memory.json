@@ -26,5 +26,37 @@
     {
         "role": "assistant",
         "content": "{   \"FUNCTION\": \"REPLY\", \"DATA\": \"The article reports that the Norwegian police have cordoned off an area in Nardo, Trondheim, after finding a World War II-era artillery grenade. The military believes it is an unarmed grenade, also known as a 'blind bomb'. The 100-meter security perimeter has been set up around the site where the grenade was found, and residents in the area are being informed about the situation.\" }"
+    },
+    {
+        "role": "user",
+        "content": "{\"FUNCTION\": \"USER REPLY\", \"SRV_RETURN\": \"When was the last time the police reported the incident? \"}"
+    },
+    {
+        "role": "assistant",
+        "content": "{  \"FUNCTION\": \"REPLY\", \"DATA\": \"According to the article, the police notified residents of the area about the situation at 19:27.\" }"
+    },
+    {
+        "role": "user",
+        "content": "{\"FUNCTION\": \"USER REPLY\", \"SRV_RETURN\": \"When was the last time the article was updated? \"}"
+    },
+    {
+        "role": "assistant",
+        "content": "{    \"FUNCTION\": \"REPLY\", \"DATA\": \"The article was updated at 20:21.\" }"
+    },
+    {
+        "role": "user",
+        "content": "{\"FUNCTION\": \"USER REPLY\", \"SRV_RETURN\": \"at what date? \"}"
+    },
+    {
+        "role": "assistant",
+        "content": "{   \"FUNCTION\": \"REPLY\", \"DATA\": \"The article was last updated on 27.04.2024.\" }"
+    },
+    {
+        "role": "user",
+        "content": "{\"FUNCTION\": \"USER REPLY\", \"SRV_RETURN\": \"is that today? \"}"
+    },
+    {
+        "role": "assistant",
+        "content": "{   \"FUNCTION\": \"REPLY\", \"DATA\": \"Yes, the article was last updated on April 27th, 2024, which is also today.\" }"
     }
 ]

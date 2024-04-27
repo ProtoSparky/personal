@@ -49,6 +49,14 @@ def write_json(data, filename):
             json.dump(data, f, indent=4)
     except Exception as e:
         print("An error occurred:", str(e))
+
+def write_json_blind(data, filename):
+    try:
+        with open(filename, 'w') as f:
+            json.dump(data, f, indent=4)
+    except Exception as e:
+        None 
+    
 #############################################
 
 
@@ -81,7 +89,7 @@ def SetupStorage():
         print("Setting up history storage...")
         temp_storage = []
         temp_storage.append(system_MSG)
-        write_json(temp_storage, memory_area)
+        write_json_blind(temp_storage, memory_area)
     elif(len(history) < 1):
         temp_storage = []
         temp_storage.append(system_MSG)
