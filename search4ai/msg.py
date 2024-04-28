@@ -9,7 +9,7 @@ import traceback
 import datetime
 import os
 current_datetime = datetime.datetime.now()
-model = "llama3"
+model = "gemma:7b-instruct-q8_0"
 API_location = "http://localhost:11434/api"
 memory_area = "./memory.json"
 system_MSG_str = """
