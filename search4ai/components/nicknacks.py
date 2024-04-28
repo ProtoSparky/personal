@@ -39,8 +39,21 @@ def remove_non_json_text(json_string):
     matches = re.findall(pattern, json_string)
     # Construct a new JSON string from the matches
     cleaned_json_string = "{" + ",".join(['"%s":%s' % (key, value) for key, value in matches]) + "}"
+    # Try to parse the JSON
+    try:
+        json.loads(cleaned_json_string)
+    except ValueError:
+        return ''
 
+    return cleaned_json_string 
 
+def remove_non_json_text_arr(json_string):
+    # Updated regular expression to match JSON key-value pairs and arrays
+    pattern = r'"([^"]+)":\s*("[^"]+"|true|false|null|\d+\.?\d*|\[[^\]]*\])'
+    # Find all matches of the pattern in the input string
+    matches = re.findall(pattern, json_string)
+    # Construct a new JSON string from the matches
+    cleaned_json_string = "{" + ",".join(['"%s":%s' % (key, value) for key, value in matches]) + "}"
     # Try to parse the JSON
     try:
         json.loads(cleaned_json_string)
@@ -92,30 +105,32 @@ def context_trimmer(memory_area):
     all_context = read_json(memory_area)
     context_length = len(all_context) - 1 #without last message
     context_pointer = 1 #skip system message
+    new_context = []
+    new_context.append(all_context[0])
     while context_pointer < context_length:
         current_context = all_context[context_pointer]
         selected_message = current_context["content"]
         #check that current context is not the last context in the message
         if(context_pointer < context_length):
             #messages here do not include system prompt or the last message written
-            message_object = CleanInput(remove_non_json_text(selected_message))
+            message_object = CleanInput(remove_non_json_text_arr(selected_message))
+            
             if(len(message_object) != 0):
                 #locate all srv return objects
                 if("SRV_RETURN" in message_object):
                     #object was a SRV return
                     #locate READ and SEARCH
-                    print("---\n")
-                    print(message_object)
-                    print("---")
                     '''
-                    if(message_object["FUNCTION"] == "READ" or message_object["FUNCTION"] == "SEARCH"):
-                        #Found SRV search and READ pages
-                        print("---\n")
-                        print(message_object)'''
-                elif("SRV_RETURN" not in message_object):
-                    print("~~~~\n")
-                    print(message_object)
-                    print("~~~~")
+                    if(message_object["FUNCTION"] != "READ" or message_object["FUNCTION"] != "SEARCH"):
+                        #Found SRV SEARCH and READ pages
+                        new_context.append(all_context[context_pointer])                '''    
+                else:
+                    new_context.append(all_context[context_pointer])
         context_pointer +=1
+    new_context.append(all_context[len(all_context) - 1])
+
+    for cpointer in new_context:
+        print("----\n")
+        print(cpointer)
 
 context_trimmer("./memory.json")
