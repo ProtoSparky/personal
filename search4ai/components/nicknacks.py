@@ -55,5 +55,67 @@ def ReadyScreen():
     print("|-------------------------------------------------------------------NEW CHAT---------------------------------------------------------------|")
     print("|------------------------------------------------------------------------------------------------------------------------------------------|")
 
-input = '{     "FUNCTION": "READ", "DATA": "The weather forecast for Narvik shows a mix of sunshine and cloudy skies. Temperatures range from 9 to 12 degrees Celsius with moderate winds." }'
-print(remove_non_json_text(input))
+def context_trimmer(memory_area): 
+    def write_json(data, filename):
+        try:
+            with open(filename, 'w') as f:
+                json.dump(data, f, indent=4)
+        except Exception as e:
+            print("An error occurred:", str(e))
+    ############################################
+    def read_json(filename):
+        try:
+            with open(filename, 'r') as f:
+                data = json.load(f)
+                return data
+        except (FileNotFoundError, json.JSONDecodeError) as e:
+            print("An error occurred:", str(e))
+            return []
+    ############################################
+    def CleanInput(str):
+        try:
+            response_obj = json.loads(str)
+            return response_obj
+        except:
+            #try more harsh filtering
+            str.replace('“', '"')
+            str.replace('”','"')
+            try:
+                response_obj = json.loads(str)
+                return response_obj
+            except:
+                return {}
+    ############################################
+
+    #this function decides what needs to be trimmed from the memory storage
+   
+    all_context = read_json(memory_area)
+    context_length = len(all_context) - 1 #without last message
+    context_pointer = 1 #skip system message
+    while context_pointer < context_length:
+        current_context = all_context[context_pointer]
+        selected_message = current_context["content"]
+        #check that current context is not the last context in the message
+        if(context_pointer < context_length):
+            #messages here do not include system prompt or the last message written
+            message_object = CleanInput(remove_non_json_text(selected_message))
+            if(len(message_object) != 0):
+                #locate all srv return objects
+                if("SRV_RETURN" in message_object):
+                    #object was a SRV return
+                    #locate READ and SEARCH
+                    print("---\n")
+                    print(message_object)
+                    print("---")
+                    '''
+                    if(message_object["FUNCTION"] == "READ" or message_object["FUNCTION"] == "SEARCH"):
+                        #Found SRV search and READ pages
+                        print("---\n")
+                        print(message_object)'''
+                elif("SRV_RETURN" not in message_object):
+                    print("~~~~\n")
+                    print(message_object)
+                    print("~~~~")
+        context_pointer +=1
+
+context_trimmer("./memory.json")

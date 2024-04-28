@@ -9,7 +9,7 @@ import traceback
 import datetime
 import os
 current_datetime = datetime.datetime.now()
-model = "gemma:7b-instruct-q8_0"
+model = "wizardlm2"
 API_location = "http://localhost:11434/api"
 memory_area = "./memory.json"
 system_MSG_str = """
@@ -56,7 +56,14 @@ def write_json_blind(data, filename):
             json.dump(data, f, indent=4)
     except Exception as e:
         None 
-    
+
+def read_json_blind(filename):
+    try:
+        with open(filename, 'r') as f:
+            data = json.load(f)
+            return data
+    except (FileNotFoundError, json.JSONDecodeError) as e:
+        return None
 #############################################
 
 
@@ -83,7 +90,7 @@ def MSG_AI(model):
 
 def SetupStorage():
     #this function sets up the JSON file if it does not exist at the time of message send
-    history = read_json(memory_area)
+    history = read_json_blind(memory_area)
     if(history == None):
         #create file
         print("Setting up history storage...")
@@ -176,5 +183,4 @@ def return2AI(text, function_name):
 
 #clear terminal
 nick.ReadyScreen()
-
 MSG_AI(model)
