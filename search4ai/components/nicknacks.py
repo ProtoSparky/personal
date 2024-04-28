@@ -132,5 +132,3 @@ def context_trimmer(memory_area):
     for cpointer in new_context:
         print("----\n")
         print(cpointer)
-
-context_trimmer("./memory.json")
