@@ -38,28 +38,52 @@ def scrape_and_filter_website(url):
 
 
 
-page = scrape_and_filter_website("https://www.yr.no/nb/v%C3%A6rvarsel/daglig-tabell/1-72837/Norge/Oslo/Oslo/Oslo")
 
 
 
-import spacy
-
-# Load spaCy's English model
-nlp = spacy.load("en_core_web_trf")
-# Placeholder function for processing each chunk
-def process_chunk(chunk):
-    # Your model's processing logic here
-    return chunk # Return the processed chunk
 
 
+def chunkenizer(textinput):
+    import spacy
+    #english models available en_core_web_sm, en_core_web_trf
+    #command to download models python -m spacy download <model name>
+    nlp = spacy.load("en_core_web_trf")
+    # Split the text into chunks using spaCy's sentence splitter
+    doc = nlp(textinput)
+    chunks = [sent.text for sent in doc.sents]
+    return chunks
 
-# Split the text into chunks using spaCy's sentence splitter
-doc = nlp(page)
-chunks = [sent.text for sent in doc.sents]
 
-# Process each chunk with your AI model
-# This is a placeholder for your model's processing logic
-processed_chunks = [process_chunk(chunk) for chunk in chunks]
-print(processed_chunks)
-# Combine the processed chunks
-combined_result = " ".join(processed_chunks)
+
+def LinkClassifier(Link):
+    from ollama import Client
+    LinkClassifierSettings = {"api":"http://localhost:11434/api", "model":"llama3"}
+    SystemPrompt = "Your goal is to classify a link that the user sends you as something like 'news' for a news website, 'weather' for a weather website, etc. Your reply MUST ONLY contain the category of classification"
+    msg = []
+    sys_msg = {"role": "system", "content": SystemPrompt}
+    msg.append(sys_msg)
+    usr_msg = {"role":"user", "content":"Classify this link '" + Link + "'"}
+    msg.append(usr_msg)
+    response = Client(LinkClassifierSettings["api"]).chat(model=LinkClassifierSettings["model"], messages=msg)
+    response_clean = response["message"]["content"]
+    return response_clean
+
+
+def SumByCategory(Category, Text):
+    from ollama import Client
+    LinkClassifierSettings = {"api":"http://localhost:11434/api", "model":"llama3"}
+    SystemPrompt = "Your goal is remove everything the user provided text has that does not contain the user provided category. Formatting, and the general content must be the same with the exception of content that does not contain the provided category"
+    msg = []
+    sys_msg = {"role": "system", "content": SystemPrompt}
+    msg.append(sys_msg)
+    usr_msg = {"role":"user", "content":"The category for this text is '" + Category + "'. Trim this text '" + Text + "'"}
+    msg.append(usr_msg)
+    response = Client(LinkClassifierSettings["api"]).chat(model=LinkClassifierSettings["model"], messages=msg)
+    response_clean = response["message"]["content"]
+    return response_clean
+
+
+url = "https://www.vg.no/nyheter/innenriks/i/bmK7kg/elever-dropper-russetiden-ola-svenneby-stoetter-dem?utm_source=vgfront&utm_content=hovedlopet_row1_pos1&utm_term=dre-vg-bmK7kg-1714421558%3Adre-662fff36c1bc995ba0b5f544&utm_medium=dre-662fff36c1bc995ba0b5f544"
+site = scrape_and_filter_website(url)
+category = LinkClassifier(url)
+print(SumByCategory(category, site))
