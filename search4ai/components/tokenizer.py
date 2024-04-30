@@ -73,14 +73,10 @@ def SumByCategory(Category, Text):
     from ollama import Client
     LinkClassifierSettings = {"api":"http://localhost:11434/api", "model":"llama3"}
     SystemPrompt = """
-Your task is to identify and extract the most relevant information from the provided text, focusing solely on the context provided by the user. This means if the context is 'weather,' you should remove all content that does not pertain to weather information, including sections like cookie policies or about pages.
+    Your task is to refine the provided content based on the user-provided context, without altering the original meaning or structure of the text. The refined text should strictly adhere to the user-provided context. For instance, if the context is 'weather', your job is to extract and retain only the weather-related information from the user-submitted text, excluding irrelevant details such as cookie policies, about sections, etc.
 
-    Ensure the extracted content is directly related to the context word. For instance, if the context is 'weather,' the output should only include weather-related information.
-    The output should not be a summary but rather the original text trimmed down to only include relevant information.
-    Avoid returning the content in a list format or as bullet points. Instead, maintain the original text structure as much as possible, ensuring the extracted content flows naturally.
-
-For other contexts, apply your judgment to determine what information is most relevant and should be included in the output. Remember, the goal is to provide a focused, context-specific portion of the original text.
-"""
+    For other categories, apply the same principle of retaining only the relevant information based on the context. The refined text should not be a mere list or bullet points of the contextual information. Instead, it should maintain the coherence and structure of the original text, while effectively trimming away any information that does not fit within the provided context.
+    """
     msg = []
     sys_msg = {"role": "system", "content": SystemPrompt}
     msg.append(sys_msg)
@@ -93,8 +89,8 @@ For other contexts, apply your judgment to determine what information is most re
 
 url = "https://www.vg.no/nyheter/innenriks/i/bmK7kg/elever-dropper-russetiden-ola-svenneby-stoetter-dem?utm_source=vgfront&utm_content=hovedlopet_row1_pos1&utm_term=dre-vg-bmK7kg-1714421558%3Adre-662fff36c1bc995ba0b5f544&utm_medium=dre-662fff36c1bc995ba0b5f544"
 site = scrape_and_filter_website(url)
-#category = LinkClassifier(url)
-#print(SumByCategory(category, site))
+category = LinkClassifier(url)
+print(SumByCategory(category, site))
 
 
 
@@ -109,5 +105,5 @@ def estimate_tokens(input_text):
     num_tokens = len(tokens)
     return num_tokens
 
-print(site)
+#print(site)
 
