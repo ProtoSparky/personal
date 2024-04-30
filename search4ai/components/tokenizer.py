@@ -72,7 +72,15 @@ def LinkClassifier(Link):
 def SumByCategory(Category, Text):
     from ollama import Client
     LinkClassifierSettings = {"api":"http://localhost:11434/api", "model":"llama3"}
-    SystemPrompt = "Your goal is remove everything the user provided text has that does not contain the user provided category. Formatting, and the general content must be the same with the exception of content that does not contain the provided category"
+    SystemPrompt = """
+Your task is to identify and extract the most relevant information from the provided text, focusing solely on the context provided by the user. This means if the context is 'weather,' you should remove all content that does not pertain to weather information, including sections like cookie policies or about pages.
+
+    Ensure the extracted content is directly related to the context word. For instance, if the context is 'weather,' the output should only include weather-related information.
+    The output should not be a summary but rather the original text trimmed down to only include relevant information.
+    Avoid returning the content in a list format or as bullet points. Instead, maintain the original text structure as much as possible, ensuring the extracted content flows naturally.
+
+For other contexts, apply your judgment to determine what information is most relevant and should be included in the output. Remember, the goal is to provide a focused, context-specific portion of the original text.
+"""
     msg = []
     sys_msg = {"role": "system", "content": SystemPrompt}
     msg.append(sys_msg)
@@ -85,5 +93,21 @@ def SumByCategory(Category, Text):
 
 url = "https://www.vg.no/nyheter/innenriks/i/bmK7kg/elever-dropper-russetiden-ola-svenneby-stoetter-dem?utm_source=vgfront&utm_content=hovedlopet_row1_pos1&utm_term=dre-vg-bmK7kg-1714421558%3Adre-662fff36c1bc995ba0b5f544&utm_medium=dre-662fff36c1bc995ba0b5f544"
 site = scrape_and_filter_website(url)
-category = LinkClassifier(url)
-print(SumByCategory(category, site))
+#category = LinkClassifier(url)
+#print(SumByCategory(category, site))
+
+
+
+from transformers import GPT2Tokenizer
+
+def estimate_tokens(input_text):
+    # Load pre-trained GPT-2 tokenizer
+    tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
+
+    # Tokenize the input text and count the number of tokens
+    tokens = tokenizer.encode(input_text)
+    num_tokens = len(tokens)
+    return num_tokens
+
+print(site)
+
