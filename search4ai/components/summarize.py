@@ -8,7 +8,7 @@ def summarize(text, language="english", sentences_count=5):
     summary = summarizer(parser.document, sentences_count)
     return ' '.join([str(sentence) for sentence in summary])
 
-import tokenizer as tk
+import components.tokenfuckoff as tk
 def summarize_ai(text, context, sentences_count, ai_model, ai_api):
     #summarization using AI
     import datetime
@@ -44,6 +44,3 @@ def summarize_ai(text, context, sentences_count, ai_model, ai_api):
     return clean_response
 
 
-web = tk.scrape_and_filter_website("https://www.vg.no/nyheter/i/wgEngG/venner-saa-knivstikking-det-er-helt-ufattelig?utm_source=vgfront&utm_content=hovedlopet_row1_pos1&utm_medium=dre-662feee7c1bc995ba0b13402")
-#print(summarize_ai(web, "What happened in this article?", 15, "llama3","http://localhost:11434/api"))
-print(tk.text_to_chunks(web))

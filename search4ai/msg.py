@@ -8,7 +8,14 @@ import components.calc as calc
 import traceback
 import datetime
 import os
+import calendar
+from datetime import date
 current_datetime = datetime.datetime.now()
+# Get today's date
+today = date.today()
+
+# Get the day of the week as a word
+day_of_week = calendar.day_name[today.weekday()]
 model = "llama3"
 API_location = "http://localhost:11434/api"
 memory_area = "./memory.json"
@@ -27,7 +34,7 @@ Rules:
 * After executing, wait for server response before returning data.
 * Do not execute READ or SEARCH functions with Google or other search engine domains.
 * If the system returns an error, STOP, REPLY to user and ASK for guidance
-Your goal is to be an educational and smart assistant. Use SEARCH and READ commands to gather up-to-date information on current matters.""" + " The current date and time is :" + current_datetime.strftime("%Y-%m-%d %H:%M:%S") + " as YYYY-MM-DD HH:MM:SS."
+Your goal is to be an educational and smart assistant. Use SEARCH and READ commands to gather up-to-date information on current matters.""" + " The current date and time is :" + current_datetime.strftime("%Y-%m-%d %H:%M:%S") + " as YYYY-MM-DD HH:MM:SS. Current day is " + day_of_week
 
 
 
