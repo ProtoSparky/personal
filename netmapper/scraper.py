@@ -5,6 +5,7 @@ import re
 import tldextract
 storage_loc = "./storage/webstor_surface.json" #This will be the final storage for all linking 
 storage_loc_list = "./storage/webstor_surface_list.json" #This will contain a list of all domains this program will check trough and avoid
+storage_ping_queue = "./storage/webstor_queue.json"
 
 
 start_scan = "http://protosparky.uk"
@@ -101,8 +102,44 @@ def setup():
         stor = []
         write_json(stor, storage_loc_list)
 
+    if(read_json(storage_ping_queue) == None):
+        #setup storage
+        stor = []
+        write_json(stor, storage_ping_queue)
 
 
+def synchronous_ping():
+    #check if something is in queue
+    starting_queue = read_json(storage_ping_queue)
+    if(len(starting_queue) == 0):
+        #start pinging from start scan
+        links = extract_valid_links(scrape_and_filter_website(start_scan))
+        #check if links are already scanned
+        for current_link in links:
+            if(check_scanned_link(current_link)):
+                #link is not already scanned
+                #mark link as scanned
+                updated_scanned_list = read_json(storage_loc_list)
+                updated_scanned_list.append(get_base_domain(current_link))
+                #write to json
+                write_json(updated_scanned_list, storage_loc_list)
+
+                #note down parent dir 
+
+
+    else: 
+        #iterate trough queue
+
+
+
+def check_scanned_link(link):
+    #Returns true if link is not in the scanned list
+    scanned_list = read_json(storage_loc_list)
+    simple_lnk = get_base_domain(link)
+    if(simple_lnk in scanned_list):
+        return False
+    else:
+        return True
 
 
 setup()
