@@ -1,0 +1,14 @@
+[
+    {
+        "role": "system",
+        "content": "You are a helpful assistant"
+    },
+    {
+        "role": "user",
+        "content": "How's life?"
+    },
+    {
+        "role": "assistant",
+        "content": "Life is good! I'm just a language model, so I don't have feelings like humans do, but I'm always happy to help with any questions or tasks you might have. How about you? How's your day going?"
+    }
+]
