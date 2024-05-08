@@ -48,7 +48,7 @@ def read_json(filename):
             data = json.load(f)
             return data
     except (FileNotFoundError, json.JSONDecodeError) as e:
-        print("An error occurred:", str(e))
+        print("Json file not found ", str(e))
         return None
 #############################################
 def write_json(data, filename):
@@ -56,22 +56,7 @@ def write_json(data, filename):
         with open(filename, 'w') as f:
             json.dump(data, f, indent=4)
     except Exception as e:
-        print("An error occurred:", str(e))
-
-def write_json_blind(data, filename):
-    try:
-        with open(filename, 'w') as f:
-            json.dump(data, f, indent=4)
-    except Exception as e:
-        None 
-
-def read_json_blind(filename):
-    try:
-        with open(filename, 'r') as f:
-            data = json.load(f)
-            return data
-    except (FileNotFoundError, json.JSONDecodeError) as e:
-        return None
+        print("Json file not found ", str(e))
 #############################################
 
 
@@ -106,7 +91,18 @@ def get_base_domain(url):
 
 
 
+def setup():
+    if(read_json(storage_loc) == None):
+        #setup storage
+        stor = {}
+        write_json(stor, storage_loc)
+    if(read_json(storage_loc_list) == None):
+        #setup storage
+        stor = []
+        write_json(stor, storage_loc_list)
 
-#print(extract_valid_links(scrape_and_filter_website(start_scan)))
-string = scrape_and_filter_website("https://google.com")
-print(extract_valid_links(string))
+
+
+
+
+setup()
