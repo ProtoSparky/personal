@@ -61,4 +61,4 @@ def extract_number_from_ping(ping_string):
     # Since you're interested in the first number, convert it to an integer
     return int(numbers[0]) if numbers else None
 
-print(is_alive("google.com"))
+print(is_alive("https://google.com"))
