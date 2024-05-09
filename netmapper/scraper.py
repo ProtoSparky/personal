@@ -4,8 +4,8 @@ import json
 import re
 import tldextract
 storage_loc = "./storage/webstor_surface.json" #This will be the final storage for all linking 
-storage_loc_list = "./storage/webstor_surface_list.json" #This will contain a list of all domains this program will check trough and avoid
-storage_ping_queue = "./storage/webstor_queue.json"
+storage_loc_list = "./storage/webstor_surface_list.json" #This will contain a list of all domains this program will avoid (Already scanned)
+storage_ping_queue = "./storage/webstor_queue.json" #This will contain a list of all domains the program will check (To be scanned)
 
 
 start_scan = "http://protosparky.uk"
@@ -107,28 +107,42 @@ def setup():
         stor = []
         write_json(stor, storage_ping_queue)
 
+    synchronous_ping_setup()
 
-def synchronous_ping():
+
+def synchronous_ping_setup():
     #check if something is in queue
     starting_queue = read_json(storage_ping_queue)
     if(len(starting_queue) == 0):
-        #start pinging from start scan
+        #start pinging from start scan as there are no links in queue
         links = extract_valid_links(scrape_and_filter_website(start_scan))
         #check if links are already scanned
         for current_link in links:
             if(check_scanned_link(current_link)):
-                #link is not already scanned
-                #mark link as scanned
-                updated_scanned_list = read_json(storage_loc_list)
-                updated_scanned_list.append(get_base_domain(current_link))
-                #write to json
-                write_json(updated_scanned_list, storage_loc_list)
+                #Shove in queue
+                starting_queue.append(current_link)
+        write_json(starting_queue,storage_ping_queue)
 
-                #note down parent dir 
+        #add starting link to surface webstor
+        current_surface_storage = read_json(storage_loc) 
+        current_surface_storage[start_scan] = []
+        for current_link in links:
+            current_surface_storage[start_scan].append(current_link)
 
 
-    else: 
-        #iterate trough queue
+def synchronous_ping():
+    queue = read_json(storage_ping_queue)
+    for current_link in queue:
+        print("scanning current link: " + current_link)
+        #iterate trough links
+
+        #add base url to scanned links
+        baseurl = get_base_domain(current_link)
+        scanned_links = read_json(storage_loc_list)
+        scanned_links.append(baseurl)
+
+        #scan link
+
 
 
 
@@ -142,4 +156,4 @@ def check_scanned_link(link):
         return True
 
 
-setup()
+setup() #setup and run code
