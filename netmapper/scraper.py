@@ -108,6 +108,7 @@ def setup():
         write_json(stor, storage_ping_queue)
 
     synchronous_ping_setup()
+    synchronous_ping()
 
 
 def synchronous_ping_setup():
@@ -128,6 +129,7 @@ def synchronous_ping_setup():
         current_surface_storage[start_scan] = []
         for current_link in links:
             current_surface_storage[start_scan].append(current_link)
+        write_json(current_surface_storage,storage_loc)
 
 
 def synchronous_ping():
@@ -141,9 +143,13 @@ def synchronous_ping():
         scanned_links = read_json(storage_loc_list)
         scanned_links.append(baseurl)
 
-        #scan link
+        #remove current link from queue
+        queue.remove(current_link)
+        read_json(queue, storage_ping_queue)
 
-
+        #scan current link
+        links = extract_valid_links(scrape_and_filter_website(current_link))
+        
 
 
 def check_scanned_link(link):
