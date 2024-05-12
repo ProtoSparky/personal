@@ -7,10 +7,10 @@ def perform_operations(starting_number, operations):
 
     operations_list = [
         lambda x: x / 2,
-        lambda x: x * 3.5,
+        lambda x: x + 3.5,
         lambda x: x + 2.55,
         lambda x: x - 2.55,
-        lambda x: x * 2, 
+        lambda x: x + 2, 
         lambda x: x / 3.5
     ]
     
@@ -30,7 +30,7 @@ operations = 60
 
 
 
-ops = 100000000
+ops = 1000000
 arr = []
 pointer = 0 
 
@@ -44,6 +44,13 @@ def loop_with_operations():
         lock.release()
         arr.append(perform_operations(starting_number, operations)) 
 
+
+def Average(lst):
+    return sum(lst) / len(lst)
+def run_results(arr):
+    print("results")
+    print(Average(arr))
+
 '''
 while pointer < ops:
     pointer +=1
@@ -55,6 +62,9 @@ def print_pointer():
         current_pointer = pointer
         lock.release()
         print(f"{current_pointer} / {ops}")
+        if(current_pointer == ops):
+            run_results(arr)
+            quit()
         time.sleep(10)
 
 
@@ -68,10 +78,3 @@ progress_thread.start()
 
 loop_thread.join()
 progress_thread.join()
-
-
-
-def Average(lst):
-    return sum(lst) / len(lst)
-print("results")
-print(Average(arr))
