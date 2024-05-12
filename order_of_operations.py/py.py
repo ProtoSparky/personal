@@ -1,4 +1,6 @@
 import random
+import threading
+import time
 
 
 def perform_operations(starting_number, operations):
@@ -31,9 +33,43 @@ operations = 60
 ops = 100000000
 arr = []
 pointer = 0 
+
+lock = threading.Lock()
+def loop_with_operations():
+    global pointer
+    global arr
+    for _ in range(ops):
+        lock.acquire()
+        pointer += 1
+        lock.release()
+        arr.append(perform_operations(starting_number, operations)) 
+
+'''
 while pointer < ops:
     pointer +=1
     arr.append(perform_operations(starting_number, operations))
+'''
+def print_pointer():
+    while True:
+        lock.acquire()
+        current_pointer = pointer
+        lock.release()
+        print(f"{current_pointer} / {ops}")
+        time.sleep(10)
+
+
+
+loop_thread = threading.Thread(target=loop_with_operations)
+loop_thread.start()
+
+progress_thread = threading.Thread(target=print_pointer)
+progress_thread.start()
+
+
+loop_thread.join()
+progress_thread.join()
+
+
 
 def Average(lst):
     return sum(lst) / len(lst)
