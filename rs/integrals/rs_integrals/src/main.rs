@@ -19,10 +19,10 @@ fn prime_checker(input:u32) -> bool{ //u32 means the number is a 32bit unsigned 
     if input <= 1{
         prime_flag = false; //number is not prime
     }
-    else if input < 1{
+    else{
         for prime_pointer in 2..input { //x..y works the same way as a python range(x,y), generates a list of numbers from x to y
-            if (input/prime_pointer) == 0 {
-                //number factor found, set prime_flag to true
+            if (input % prime_pointer) == 0 {
+                //number is not a factor found, set prime_flag to true
                 prime_flag = true; 
                 break; 
             }
