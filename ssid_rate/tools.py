@@ -203,3 +203,14 @@ def pad_string(desired_length, original_string):
     padded_string = " " * spaces_needed + original_string + " " * spaces_needed
     
     return padded_string
+
+def read_file(file_path):
+    with open(file_path, 'r') as file:
+        return file.read()
+
+def read_file_by_lines(file_path):
+    lines = []
+    with open(file_path, 'r') as file:
+        for line in file:
+            lines.append(line.strip())  # strip removes the trailing newline character
+    return lines
