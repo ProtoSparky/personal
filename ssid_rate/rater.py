@@ -58,4 +58,6 @@ for current_network in filtered:
     tmp_array.append(network)
     counter += 1
 print(tmp_array)
-    
+
+with open('output.json', 'w') as f:
+    json.dump(tmp_array, f)
