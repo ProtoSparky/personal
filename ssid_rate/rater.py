@@ -8,13 +8,13 @@ llama_model = "llama3"
 file_path = f"C:\\Users\\{username}\\Downloads\\ssid2.csv"
 stock_ssid = ["AirTies", "Air", "TP-Link", "Telia", "Telenor", 
 "GNX", "Getbox", "NextGenTel", "DIRECT","Home_Net","Zyxel", "NETGEAR", "Altibox", 
-"ASUS", "dlink", "TP-LINK", "Osloskolen", "GET", "Get", "linksys", "REMOTE", "HP-"]
+"ASUS", "dlink", "TP-LINK", "Osloskolen", "GET", "Get", "linksys", "REMOTE", "HP-", "Omni", "ok-"]
 
 
 def rater(ssid):
     ## Ask AI to rate ssid
     system_msg = """Your job is to rate the wifi SSID the user sends from 0 to 10 by creativity. 
-    If the SSID is a default one, rate it negative 1. 
+    If the SSID is a default one, rate it -1. When it comes to creativity, it's ok if the name contains 'wifi' or the frequency. What matters is if it's fun, quirky, hilarios, and so on. Rate it by the content of the name
     You myst ONLY reply with the intiger, and nothing more.
     """
     system_msg_obj = {"role":"system", "content":system_msg}
@@ -49,11 +49,13 @@ def filter():
 
 
 tmp_array = []
-for current_network in filter():
+counter = 0
+filtered = filter()
+for current_network in filtered:
     rated = rater(current_network)
     network = {current_network : rated}
-    print(network)
+    print(str(network) + str(counter) + "/" + str(len(filtered)))
     tmp_array.append(network)
-
+    counter += 1
 print(tmp_array)
     
