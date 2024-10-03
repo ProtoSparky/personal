@@ -25,12 +25,11 @@ function StartGame(){
 
 function CheckForInput(){
     //function that runs every 10ms
-    
 
 }
 function BackgroundUpdate(){
     //update things in the background
-
+    tester();
 }
 
 function RenderFrameBuffer(){
@@ -69,18 +68,16 @@ function RenderFrameBuffer(){
         //transform object space to world space coordinates
         //Read from vertex.vtex, transform, and write to vertex.vtex_transformed
         //this set converts object space to world space, and scales the object
-        function applyTransform(vertex, translation,scale) {
+        function applyTransform(vertex, loc,scale) {
             return {
-                x: (vertex.x * scale.x) + translation.x,
-                y: (vertex.y * scale.y) + translation.y,
+                x: ((vertex.x * scale.x) + loc.x),
+                y: (vertex.y * scale.y) + loc.y,
+                z: (vertex.z * scale.z) + loc.z,
             };
         }
         CurrentObject.object_data.vertex.vtex_transformed = CurrentObject.object_data.vertex.vtex_raw.map(vertex => applyTransform(vertex, CurrentObject.transform.loc, CurrentObject.transform.sc));
         
-        //
-        //
-        //
-        //
+
         //TODO: Rotation is borked for some reason. All objects get same rotation
         //apply rotation to transformed data
         if(CurrentObject.transform.rot != undefined){
@@ -119,7 +116,6 @@ function RenderFrameBuffer(){
 
 
 }
-
 function LoadAssets(){
     console.info("loading meshes");
 
@@ -136,4 +132,13 @@ function LoadAssets(){
         }
     }
     
+}
+
+function tester(){
+    if(RenderMap.objects.player.transform.sc.x < 10){
+        RenderMap.objects.player.transform.sc.x ++;
+    }
+    if(RenderMap.objects.player.transform.sc.x == 10){
+        RenderMap.objects.player.transform.sc.x = 1;
+    }
 }
