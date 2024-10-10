@@ -37,16 +37,16 @@
             // 
             this.DeviceDropdown.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.DeviceDropdown.FormattingEnabled = true;
-            this.DeviceDropdown.Location = new System.Drawing.Point(36, 180);
+            this.DeviceDropdown.Location = new System.Drawing.Point(36, 178);
             this.DeviceDropdown.Name = "DeviceDropdown";
-            this.DeviceDropdown.Size = new System.Drawing.Size(278, 21);
+            this.DeviceDropdown.Size = new System.Drawing.Size(242, 21);
             this.DeviceDropdown.TabIndex = 1;
             this.DeviceDropdown.DropDownClosed += new System.EventHandler(this.DeviceDropdown_DropDownClosed);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(47, 66);
+            this.label1.Location = new System.Drawing.Point(33, 67);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(245, 13);
             this.label1.TabIndex = 2;
@@ -56,7 +56,7 @@
             // 
             this.DeviceSaveBTN.Cursor = System.Windows.Forms.Cursors.Default;
             this.DeviceSaveBTN.Enabled = false;
-            this.DeviceSaveBTN.Location = new System.Drawing.Point(239, 354);
+            this.DeviceSaveBTN.Location = new System.Drawing.Point(116, 246);
             this.DeviceSaveBTN.Name = "DeviceSaveBTN";
             this.DeviceSaveBTN.Size = new System.Drawing.Size(75, 23);
             this.DeviceSaveBTN.TabIndex = 3;
@@ -68,12 +68,12 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(339, 341);
             this.Controls.Add(this.DeviceSaveBTN);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.DeviceDropdown);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "CtrlVolume Setup";
             this.ResumeLayout(false);
             this.PerformLayout();
 
