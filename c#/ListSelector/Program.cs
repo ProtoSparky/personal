@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ListSelector
@@ -17,7 +14,7 @@ namespace ListSelector
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            bool variable = true; 
+            bool variable = true;
             if (variable)
             {
                 Application.Run(new Form1());
